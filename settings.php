@@ -45,5 +45,8 @@ if ($ADMIN->fulltree) {
 	// Reports: display rank
 	$settings->add(new admin_setting_configcheckbox('assessmentpath/displayrank', get_string('displayrank', 'scormlite'), get_string('displayrankdesc','scormlite'), 0));
 
+    // Player close button
+	$settings->add(new admin_setting_configcheckbox('assessmentpath/displayclosebutton', get_string('displayclosebutton', 'scormlite'), get_string('displayclosebuttondesc', 'scormlite'), 0));
+
 }
 
