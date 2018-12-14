@@ -1,0 +1,568 @@
+
+/* --------------- Steps layout --------------- */
+
+.path-mod-assessmentpath #steps,
+.path-mod-assessmentpath #id_steps {
+	border: none;
+}
+.path-mod-assessmentpath #steps h4,
+.path-mod-assessmentpath #id_steps h4,
+.path-mod-assessmentpath #steps h5,
+.path-mod-assessmentpath #id_steps h5 {
+	text-align: left;
+}
+.path-mod-assessmentpath #steps>legend,
+.path-mod-assessmentpath #id_steps>legend {
+	display: none;
+	visibility: hidden;
+}
+.path-mod-assessmentpath #steps .step-inner,
+.path-mod-assessmentpath #id_steps .step-inner {
+	border: 1px solid #ddd;
+	padding: 10px;
+}
+.path-mod-assessmentpath #steps .step .stepsettings,
+.path-mod-assessmentpath #id_steps .step .stepsettings {
+	overflow:auto;
+}
+.path-mod-assessmentpath #steps .step .steptests,
+.path-mod-assessmentpath #id_steps .step .steptests {
+	margin-top: 15px;
+	overflow:auto;
+}
+.path-mod-assessmentpath #steps .step .steptests .testsettings,
+.path-mod-assessmentpath #id_steps .step .steptests .testsettings {
+	display: inline;
+	float: left;
+	width: 48%;
+}
+
+/* --------------- Tabs --------------- */
+
+#page-mod-assessmentpath-mod #tabs {
+	text-align: center;
+	border-bottom: 1px solid #aaa;
+	padding: 5px 10px;
+}
+#page-mod-assessmentpath-mod #tabs .tab {
+	padding: 5px 10px;
+	margin-bottom: 5px;
+	border: 1px solid #aaa;
+	border-top-left-radius: 10px;
+	border-top-right-radius: 10px;
+}
+#page-mod-assessmentpath-mod #tabs .tab:hover {
+	cursor: pointer;
+}
+#page-mod-assessmentpath-mod #tabs .tab.active {
+	border-bottom: 1px solid #fafafa;
+	cursor: auto;
+}
+
+/* --------------- Main settings form --------------- */
+
+#page-mod-assessmentpath-mod fieldset#general input[name="name"] {
+	width: 450px;
+}
+#page-mod-assessmentpath-mod fieldset#general input[name="code"] {
+	width: 60px;
+}
+
+/* --------------- Step --------------- */
+
+/* -- Commands -- */
+
+#page-mod-assessmentpath-mod #id_steps .commands {
+	text-align: right;
+}
+#page-mod-assessmentpath-mod #id_steps .commands span {
+	margin-left: 10px;
+	cursor: pointer;
+}
+#page-mod-assessmentpath-mod #id_steps .commands span.active {
+	color: #888;
+}
+
+/* -- Step settings -- */
+
+/*
+#page-mod-assessmentpath-mod #id_steps .step .stepsettings .fitem {
+	float: left;
+	display: inline;
+	margin-right: 10px;
+}
+#page-mod-assessmentpath-mod #id_steps .step .stepsettings .fitem .felement,
+#page-mod-assessmentpath-mod #id_steps .step .stepsettings .fitem .felement input[type="text"] 
+{
+	float: left;
+	margin-left: 0;
+	padding-left: 5px;
+}
+*/
+#page-mod-assessmentpath-mod #id_steps .step .stepsettings {
+	overflow-x: hidden;
+}
+#page-mod-assessmentpath-mod #id_steps .step .stepsettings .fitem:first-child input[type="text"] {
+	width: 50px;
+}
+#page-mod-assessmentpath-mod #id_steps .step .stepsettings .fitem + .fitem input[type="text"] {
+	width: 400px;
+}
+#page-mod-assessmentpath-mod #id_steps .step .testsettings .fitem .felement.ffilepicker {
+    width: 90%;
+}
+
+/* -- Test settings -- */
+
+/* -- Package (more compact display) -- */
+
+#page-mod-assessmentpath-mod #id_steps .step .steptests .testsettings h5 + .fitem .fitemtitle {
+	display: none;
+}
+#page-mod-assessmentpath-mod #id_steps .step .steptests .testsettings h5 + .fitem .felement {
+	margin-left: 0;
+}
+
+/* -- Advanced settings -- */
+
+#page-mod-assessmentpath-mod #id_steps .step .testsettings .advanced {
+	margin-top: 10px;
+	padding-top: 10px;
+	border-top: 1px dashed #ddd;
+}
+#page-mod-assessmentpath-mod #id_steps .step .testsettings .fitem,
+#page-mod-assessmentpath-mod #id_steps .step .testsettings .fitem .fitemtitle,
+#page-mod-assessmentpath-mod #id_steps .step .testsettings .fitem .felement {
+	width: auto;
+}
+#page-mod-assessmentpath-mod #id_steps .step .testsettings .fitem .fitemtitle {
+	margin-right: 5px;
+}
+#page-mod-assessmentpath-mod #id_steps .step .testsettings .fitem .felement {
+	margin-left: 0;
+}
+
+/* -- Errors -- */
+
+#page-mod-assessmentpath-mod #id_steps .step .stepsettings .fitem .felement.error span {
+	display: none;
+}
+#page-mod-assessmentpath-mod .fitem .felement.error input[type="text"] {
+	border: 2px solid #A00;
+}
+#page-mod-assessmentpath-mod #id_steps .step .steptests .testsettings h5 + .fitem .felement.error .mdl-left div:first-child input {
+	border: 2px solid #A00;
+}
+
+
+/* --------------- Reports --------------- */
+
+.path-mod-assessmentpath-report #region-main .no-overflow,
+.path-course-report-assessmentpath #region-main .no-overflow
+{
+	margin-bottom: 20px;
+}
+.path-mod-assessmentpath-report #region-main table.flexible tr.average,
+.path-mod-assessmentpath-report #region-main table.flexible td.avg,
+.path-mod-assessmentpath-report #region-main table.flexible td.title
+{
+	font-weight: bold;
+}
+.path-mod-assessmentpath-report #region-main table.flexible tr.trainer
+{
+	color: #888;
+}
+.path-mod-assessmentpath-report #region-main table.flexible td
+{
+	text-align: center;
+}
+.path-mod-assessmentpath-report #region-main table.flexible td.fullname, 
+.path-mod-assessmentpath-report #region-main table.flexible td.title
+{
+	text-align: left;
+}
+.path-mod-assessmentpath-report #region-main table.flexible td.score_initial,
+.path-mod-assessmentpath-report #region-main table.flexible td.score_remediation,
+.path-mod-assessmentpath-report #region-main table.flexible td.step,
+.path-mod-assessmentpath-report #region-main table.flexible td.rank
+{
+	width: 50px;
+}
+.path-mod-assessmentpath-report #region-main h5,
+{
+	text-align: left;
+}
+.exportcommands {
+	margin-top: 30px;
+}
+
+
+/* ------------------------------------------------------------------ From the old theme ------------------------------------------------------------------- */
+
+
+
+/* Assessment Path
+------------------------*/
+
+/* Edit */
+
+#page-mod-assessmentpath-mod #region-main #tabs {
+    border-bottom: 1px solid #ddd;
+    padding: 3px 10px;
+    margin-bottom: 20px;
+}
+#page-mod-assessmentpath-mod #region-main #tabs .tab {
+    border: 1px solid #ddd;
+    margin-right: 4px;
+    background: #F7F7F7;
+    color: #00B6CC;
+    font-weight: normal;
+}
+#page-mod-assessmentpath-mod #region-main #tabs .tab:hover {
+    background: white;
+}
+#page-mod-assessmentpath-mod #region-main #tabs .tab.active {
+    border-bottom: 1px solid #fff;
+    background: white;
+    color: #333;
+    font-weight: bold;
+}
+
+#page-mod-assessmentpath-mod #region-main #id_colorszone .fitemtitle {
+    float: left;
+    width: 70px;
+    text-align: right;
+}
+#page-mod-assessmentpath-mod #region-main #id_colorszone .felement {
+    float: left;
+    width: 100px;
+    margin-left: 10px;
+}
+#page-mod-assessmentpath-mod #region-main #id_colorszone .felement input {
+    color: #fff;
+    text-align: center;
+    font-weight: bold;
+    border: none;
+}
+@media (min-width: 1200px) {
+    #page-mod-assessmentpath-mod #region-main #id_colorszone .fitemtitle {
+        width: 245px;
+    }
+    #page-mod-assessmentpath-mod #region-main #id_colorszone .felement {
+        margin-left: 10px;
+    }
+}
+.path-mod-assessmentpath #steps .step-inner, .path-mod-assessmentpath #id_steps .step-inner {
+    margin-bottom: 20px;
+}
+
+
+/* Reports */
+
+.path-mod-assessmentpath-report #region-main th i.icon,
+.path-course-report-assessmentpath #region-main th i.icon
+{
+    margin-left: 0;
+    margin-right: 0;
+}
+.path-mod-assessmentpath-report #region-main td.score i.icon,
+.path-course-report-assessmentpath #region-main td.score i.icon,
+.path-mod-assessmentpath-report #region-main td.initial i.icon,
+.path-course-report-assessmentpath #region-main td.initial i.icon,
+.path-mod-assessmentpath-report #region-main td.remediation i.icon,
+.path-course-report-assessmentpath #region-main td.remediation i.icon
+{
+    color: #ffffff;
+}
+.path-mod-assessmentpath-report #region-main .generalbox,
+.path-course-report-assessmentpath #region-main .generalbox
+{
+    background: #f3f3f3;
+    border: none;
+    padding: 10px;
+    margin-bottom: 40px;
+}
+.path-mod-assessmentpath-report #region-main .generalbox h2,
+.path-course-report-assessmentpath #region-main .generalbox h2 {
+    color: #333;
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 7px 0 10px 0;
+    margin: 0 !important;
+    text-align: center !important;
+    border: none !important;
+}
+.path-mod-assessmentpath-report #region-main .generalbox h3,
+.path-course-report-assessmentpath #region-main .generalbox h3 {
+    color: #333;
+    font-size: 1.1em;
+    font-weight: normal;
+    padding: 0 0 5px 0;
+    margin: 0;
+}
+.path-course-report-assessmentpath #region-main .activity h4 {
+    color: #333;
+}
+.path-mod-assessmentpath-report #region-main table.flexible,
+.path-course-report-assessmentpath #region-main table.flexible {
+    width: 100%;
+    margin-bottom: 30px;
+}
+.path-course-report-assessmentpath #region-main .activity table.flexible {
+    margin-bottom: 10px;
+}
+.path-course-report-assessmentpath #region-main .activity {
+    margin-bottom: 30px;
+}
+.path-mod-assessmentpath-report #region-main td,
+.path-course-report-assessmentpath #region-main td {
+    vertical-align: middle;
+}
+.path-mod-assessmentpath-report #region-main th.fullname,
+.path-course-report-assessmentpath #region-main th.fullname,
+.path-course-report-assessmentpath #region-main th.caption
+{
+    text-align: left;
+}
+.path-mod-assessmentpath-report #region-main tr.average,
+.path-course-report-assessmentpath #region-main tr.average {
+    border: 1px solid #ccc;
+}
+.path-mod-assessmentpath-report #region-main tr.average td,
+.path-course-report-assessmentpath #region-main tr.average td {
+    font-weight: bold;
+    background: #f3f3f3;
+    border: none;
+}
+.path-mod-assessmentpath-report #region-main td.title {
+    font-size: 12px;
+    color: #333;
+}
+.path-mod-assessmentpath-report #region-main td.picture,
+.path-mod-assessmentpath-report #region-main td.score,
+.path-mod-assessmentpath-report #region-main td.avg,
+.path-mod-assessmentpath-report #region-main td.initial,
+.path-mod-assessmentpath-report #region-main td.remediation,
+.path-mod-assessmentpath-report #region-main td.beforeremediation,
+.path-mod-assessmentpath-report #region-main td.afterremediation,
+.path-course-report-assessmentpath #region-main td.picture,
+.path-course-report-assessmentpath #region-main td.score,
+.path-course-report-assessmentpath #region-main td.avg {
+    width: 45px;
+    text-align: center;
+    font-weight: bold;
+    color: #fff;
+}
+.path-mod-assessmentpath-report #region-main tr.trainer td,
+.path-course-report-assessmentpath #region-main tr.trainer td {
+    color: #aaa;
+}
+.path-mod-assessmentpath-report #region-main tr.trainer td.avg,
+.path-mod-assessmentpath-report #region-main tr.trainer td.initial,
+.path-mod-assessmentpath-report #region-main tr.trainer td.remediation,
+.path-mod-assessmentpath-report #region-main tr.trainer td.score,
+.path-course-report-assessmentpath #region-main tr.trainer td.avg,
+.path-course-report-assessmentpath #region-main tr.trainer td.score {
+    color: #fff;
+    font-weight: normal;
+}
+.path-course-report-assessmentpath #region-main td.rank {
+    width: 45px;
+    text-align: center;
+}
+.path-course-report-assessmentpath #region-main .activity td.caption {
+    font-size: 1.2em;
+}
+.path-mod-assessmentpath-report #region-main .comment h5,
+.path-course-report-assessmentpath #region-main .comment h5 {
+    color: #999;
+    font-size: 1.3em;
+    margin-bottom: 0;
+}
+.path-course-report-assessmentpath #region-main .comment.coursecomment {
+    border-top: 3px solid #f3f3f3;
+    padding-top: 30px;
+}
+.path-mod-assessmentpath-report #region-main .comment textarea,
+.path-course-report-assessmentpath #region-main .comment textarea {
+    width: 95%;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin-bottom: 3px;
+    color: #666;
+}
+.path-mod-assessmentpath-report #region-main .exportcommands,
+.path-course-report-assessmentpath #region-main .exportcommands {
+    background: #f3f3f3;
+    padding: 10px;
+}
+#page-course-report-assessmentpath-report-P0 #region-main td.percent {
+    color: #333;
+}
+#page-course-report-assessmentpath-report-P0 #region-main div.bar {
+    border: 1px solid #333;
+    background: none;
+}
+#page-course-report-assessmentpath-report-P0 #region-main div.progress {
+    background: #85C440;
+}
+#page-course-report-assessmentpath-report-P0 #region-main table.flexible .header {
+    border: none !important;
+    background: none !important;
+}
+#page-course-report-assessmentpath-report-P0 #region-main table.flexible .vspace td {
+    border: none;
+}
+#page-course-report-assessmentpath-report-P0 #region-main table.flexible td.progress {
+    text-align: center;
+	display: table-cell !important;
+}
+#page-course-report-assessmentpath-report-P0 #region-main table.flexible td.completed {
+    text-align: center;
+    background: #85C440;
+    font-weight: bold;
+    color: white;
+}
+#page-course-report-assessmentpath-report-P0 #region-main table.flexible td.incomplete {
+    text-align: center;
+    background: #eee;
+}
+#page-mod-assessmentpath-report-P4 #region-main table.flexible td.scorefield {
+    width: 55px;
+}
+#page-mod-assessmentpath-report-P4 #region-main table.flexible td.scorefield input {
+    width: 35px;
+    text-align: center;
+}
+#page-mod-assessmentpath-report-P4 #region-main .buttons {
+    text-align: right;
+    margin-top: -10px;
+    margin-bottom: 30px;
+}
+#page-mod-assessmentpath-report-P4 #region-main table.flexible td.title {
+    line-height: 3em;
+}
+#page-mod-assessmentpath-report-P4 #region-main table.flexible tr.r1 td.beforeremediation {
+    font-size: 1.5em;
+}
+
+
+/* View */
+
+#page-mod-assessmentpath-view #region-main h2.main {
+    color: #333;
+    padding: 0 !important;
+    margin-bottom: 0 !important;
+    text-align: center !important;
+    border: none !important;
+}
+#page-mod-assessmentpath-view #region-main .generalbox.myprofile {
+    display: none;
+    border: none;
+    margin: 10px 10px 0 10px;
+}
+#page-mod-assessmentpath-view #region-main .generalbox.myprofile a {
+    display: block;
+}
+#page-mod-assessmentpath-view #region-main .step {
+    padding-top: 10px;
+}
+#page-mod-assessmentpath-view #region-main .step .step-inner {
+    padding: 0 10px 10px 0;
+    border: none;
+    background: #F9F9F9;
+    margin-top: 20px;
+}
+#page-mod-assessmentpath-view.ie7 #region-main .step .step-inner {
+    border-top: none;
+    border-right: none;
+}
+#page-mod-assessmentpath-view #region-main .step .stepsettings {
+    background: url([[pix:theme|page/arrow_grey]]) 0 0 no-repeat;
+    margin: 0;
+    padding-left: 40px;
+    padding-top: 3px;
+}
+#page-mod-assessmentpath-view #region-main .step.start .stepsettings {
+    background: url([[pix:theme|page/arrow_green]]) 0 0 no-repeat;
+}
+#page-mod-assessmentpath-view #region-main .step.closed .stepsettings {
+    background: url([[pix:theme|page/arrow_lightgrey]]) 0 0 no-repeat;
+}
+#page-mod-assessmentpath-view #region-main .step .stepsettings h4 {
+    font-size: 1.2em;
+}
+#page-mod-assessmentpath-view #region-main .step.closed .stepsettings h4 {
+    color: #999;
+}
+#page-mod-assessmentpath-view #region-main .step .stepsettings h4 span {
+}
+#page-mod-assessmentpath-view #region-main .step .stepsettings h4 {
+    margin: 10px 0 10px 10px;
+}
+#page-mod-assessmentpath-view.ie7 #region-main .step .stepsettings h4 span {
+    background: none;
+}
+#page-mod-assessmentpath-view #region-main .step .steptests {
+    padding: 0 20px 16px 26px;
+}
+#page-mod-assessmentpath-view.ie7 #region-main .step .steptests {
+    overflow: hidden;
+}
+#page-mod-assessmentpath-view #region-main .step .testsettings {
+    border: 1px solid #ccc;
+    background: #eee;
+    width: 44%;
+    padding: 0;
+    margin: 0;
+}
+#page-mod-assessmentpath-view #region-main .step .testsettings.passed,
+#page-mod-assessmentpath-view #region-main .step .testsettings.completed {
+    border: 2px solid #85C440;
+}
+#page-mod-assessmentpath-view #region-main .step .testsettings.incomplete {
+    border: 2px solid #FDC200;
+}
+#page-mod-assessmentpath-view #region-main .step .testsettings.failed {
+    border: 2px solid #D53B3B;
+}
+#page-mod-assessmentpath-view #region-main .step .testinner {
+    padding: 20px;
+}
+#page-mod-assessmentpath-view #region-main .step .initialtest {
+    float: left;
+}
+#page-mod-assessmentpath-view #region-main .step .remediationtest {
+    float: right;
+}
+#page-mod-assessmentpath-view #region-main .step .sep {
+    background: url([[pix:theme|page/arrow_right_grey]]) right center no-repeat;
+    height: 100px;
+    float: left;
+    width: 10%;
+}
+#page-mod-assessmentpath-view #region-main .step .sep.start {
+    background: url([[pix:theme|page/arrow_right_green]]) center center no-repeat;
+}
+#page-mod-assessmentpath-view #region-main .step.closed .sep {
+    background: url([[pix:theme|page/arrow_right_lightgrey]]) center center no-repeat;
+}
+#page-mod-assessmentpath-view #region-main .step .testsettings h5 {
+    font-size: 1.2em;
+    color: #666;
+}
+#page-mod-assessmentpath-view #region-main .step .testsettings .status {
+    margin-bottom: 16px;
+}
+#page-mod-assessmentpath-view #region-main .step .testsettings .status p {
+    color: #999;
+    margin-bottom: 0;
+}
+#page-mod-assessmentpath-view #region-main .step .testsettings .status span.value {
+    color: #333;
+}
+
+
+
+
+

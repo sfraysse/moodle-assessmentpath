@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/assessmentpathdb" VERSION="20070401" COMMENT="XMLDB file for Moodle mod/assessmentpath" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd">
+	<TABLES>
+		<TABLE NAME="assessmentpath" COMMENT="" NEXT="assessmentpath_steps">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="course" COMMENT=""/>
+				<FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" DEFAULT="0" COMMENT="" PREVIOUS="id" NEXT="name" />
+				<FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Name field for moodle instances" PREVIOUS="course" NEXT="code" />
+				<FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Kind of short name" PREVIOUS="name" NEXT="intro" />
+				<FIELD NAME="intro" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="General introduction of the RTWS activity" PREVIOUS="code" NEXT="introformat" />
+				<FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Format of the intro field (MOODLE, HTML, MARKDOWN...)" PREVIOUS="intro" NEXT="colors" />
+				<FIELD NAME="colors" TYPE="text" LENGTH="big" NOTNULL="true" SEQUENCE="false" PREVIOUS="introformat" NEXT="timecreated"/>
+				<FIELD NAME="timecreated" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="" PREVIOUS="colors" NEXT="timemodified" />
+				<FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="" PREVIOUS="timecreated" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="course" UNIQUE="false" FIELDS="course" />
+			</INDEXES>
+		</TABLE>
+
+		<TABLE NAME="assessmentpath_steps" COMMENT="" PREVIOUS="assessmentpath" NEXT="assessmentpath_tests">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="activity" COMMENT=""/>
+				<FIELD NAME="activity" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" DEFAULT="0" COMMENT="" PREVIOUS="id" NEXT="title" />
+				<FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Test title" PREVIOUS="activity" NEXT="code" />
+				<FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="" PREVIOUS="title" NEXT="rank" />
+				<FIELD NAME="rank" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="code" COMMENT="" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="activity" UNIQUE="false" FIELDS="activity" />
+			</INDEXES>
+		</TABLE>
+
+		<TABLE NAME="assessmentpath_tests" COMMENT="" PREVIOUS="assessmentpath_steps" NEXT="assessmentpath_comments">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="step" COMMENT=""/>
+				<FIELD NAME="step" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" DEFAULT="0" COMMENT="Id of the containing test" PREVIOUS="id" NEXT="sco" />
+				<FIELD NAME="sco" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" DEFAULT="0" COMMENT="Id of the SCO" PREVIOUS="step" NEXT="remediation"/>
+				<FIELD NAME="remediation" TYPE="int" LENGTH="1" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" DEFAULT="0" COMMENT="Is this SCO for remediation?" PREVIOUS="sco"/>
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+			<INDEXES>
+				<INDEX NAME="step" UNIQUE="false" FIELDS="step" />
+			</INDEXES>
+		</TABLE>
+
+		<TABLE NAME="assessmentpath_comments" COMMENT="" PREVIOUS="assessmentpath_tests">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="contexttype" COMMENT=""/>
+				<FIELD NAME="contexttype" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" DEFAULT="0" COMMENT="Identifies the type of context in which the comment is registered. 1 for an assessmentpath, 2 for a test" PREVIOUS="id" NEXT="contextid" />
+				<FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="contexttype" NEXT="userid" COMMENT="Id the record in the context of which this comment exists"/>
+				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="contextid" NEXT="comment" COMMENT="Optional user id"/>
+				<FIELD NAME="comment" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="General introduction of the RTWS activity" PREVIOUS="userid" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+		</TABLE>
+
+	</TABLES>
+</XMLDB>
