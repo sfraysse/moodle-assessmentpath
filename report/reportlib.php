@@ -386,13 +386,7 @@ function assessmentpath_report_get_scores($scoids, $userids, $closedonly = true)
 	foreach ($records as $record) {
 		if (!array_key_exists($record->userid, $scores)) $scores[$record->userid] = array();
 		if (!array_key_exists($record->scoid, $scores[$record->userid])) $scores[$record->userid][$record->scoid] = null;
-		if ($closedonly === true) {
-			if ($record->manualopen == 2 || ($record->manualopen == 0 && time() > $record->timeclose)) {
-				$scores[$record->userid][$record->scoid] = floatval($record->score)*100;
-			}
-		} else {
-			$scores[$record->userid][$record->scoid] = floatval($record->score)*100;
-		}
+		$scores[$record->userid][$record->scoid] = floatval($record->score)*100;
 	}
 	return $scores;
 }
@@ -600,9 +594,9 @@ class assessmentpath_report_table {
 				foreach ($element as $eltid => $elt) {
 					if (array_key_exists($eltid, $tests) && isset($tests[$eltid])) {
 						$review_link = null;
-						$reviewallowed = has_capability('mod/scormlite:reviewmycontent', $this->context);
 						if ($remediation == 0) $scoid = $elt->scoid;
 						else $scoid = $this->content[$eltid]->scoid;
+						$reviewallowed = has_capability('mod/scormlite:reviewmycontent', $this->context);
 						if ($reviewallowed) $review_link = scormlite_report_get_link_review($scoid, $userid, $this->url);
 						if ($links == true) $row[] = array('score' => sprintf("%01.1f", $tests[$eltid]), 'colors' => $this->colors, 'link' => $review_link);
 						else $row[] = array('score' => sprintf("%01.1f", $tests[$eltid]), 'colors' => $this->colors);

@@ -38,12 +38,21 @@ if ($ADMIN->fulltree) {
 	// Chrono
 	$settings->add(new admin_setting_configcheckbox('assessmentpath/displaychrono', get_string('displaychrono', 'scormlite'), get_string('displaychronodesc','scormlite'), 1));
 
+    // Maximum number of attempts
+	$settings->add(new admin_setting_configselect('assessmentpath/maxattempt', get_string('maximumattempts', 'scormlite'), '', 1, scormlite_get_attempts_array()));
+
+    // Score to keep when multiple attempts
+	$settings->add(new admin_setting_configselect('assessmentpath/whatgrade', get_string('whatgrade', 'scormlite'), get_string('whatgradedesc', 'scormlite'), 0, scormlite_get_what_grade_array()));
+
 	// Colors
 	$jsoncolors = '{"lt":50, "color":"#D53B3B"}, {"lt":65, "color":"#EF7A00"}, {"lt":75, "color":"#FDC200"}, {"lt":101,"color":"#85C440"}';
 	$settings->add(new admin_setting_configtext('assessmentpath/colors', get_string('colors', 'scormlite'), get_string('colorsdesc','scormlite'), $jsoncolors, PARAM_RAW, 100));
 
 	// Reports: display rank
 	$settings->add(new admin_setting_configcheckbox('assessmentpath/displayrank', get_string('displayrank', 'scormlite'), get_string('displayrankdesc','scormlite'), 0));
+
+    // Reports: review access
+	$settings->add(new admin_setting_configselect('assessmentpath/review_access', get_string('review_access', 'scormlite'), get_string('review_access_help', 'scormlite'), 0, scormlite_get_review_access_array()));
 
     // Player close button
 	$settings->add(new admin_setting_configcheckbox('assessmentpath/displayclosebutton', get_string('displayclosebutton', 'scormlite'), get_string('displayclosebuttondesc', 'scormlite'), 0));

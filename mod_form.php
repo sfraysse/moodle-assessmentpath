@@ -64,7 +64,7 @@ class mod_assessmentpath_mod_form extends moodleform_mod {
 		$mform->addHelpButton('code', 'code', 'scormlite');
 
 		// Summary
-        // KD2015-61 – add_intro_editor to be replaced by standard_intro_elements
+        // KD2015-61 ï¿½ add_intro_editor to be replaced by standard_intro_elements
 		// $this->add_intro_editor();
         $this->standard_intro_elements();
 
@@ -295,6 +295,19 @@ class mod_assessmentpath_mod_form extends moodleform_mod {
 		$mform->addRule($name, null, 'numeric', null, 'client');
 		$mform->addRule($name, null, 'nopunctuation', null, 'client');
 
+        // Max Attempts
+		$name = $scoprefix . 'maxattempt[' . $i . ']';
+		$mform->addElement('select', $name, get_string('maximumattempts', 'scormlite'), scormlite_get_attempts_array());
+		$mform->addHelpButton($name, 'maximumattempts', 'scormlite');
+		$mform->setDefault($name, $config->maxattempt);
+
+        // What Attempt
+		$name = $scoprefix . 'whatgrade[' . $i . ']';
+		$mform->addElement('select', $name, get_string('whatgrade', 'scormlite'), scormlite_get_what_grade_array());
+		$mform->disabledIf($name, $scoprefix . 'maxattempt[' . $i . ']', 'eq', 1);
+		$mform->addHelpButton($name, 'whatgrade', 'scormlite');
+		$mform->setDefault($name, $config->whatgrade);
+
 		// Framed / Popup Window
 		$name = $scoprefix.'popup['.$i.']';
 		$mform->addElement('select', $name, get_string('display', 'scormlite'), scormlite_get_popup_display_array());
@@ -305,6 +318,13 @@ class mod_assessmentpath_mod_form extends moodleform_mod {
 		$mform->addElement('selectyesno', $name, get_string('displaychrono', 'scormlite'));
 		$mform->setDefault($name, $config->displaychrono);
 		$mform->addHelpButton($name, 'displaychrono', 'scormlite');
+
+		// Review access
+		$name = $scoprefix . 'review_access[' . $i . ']';
+		$mform->addElement('select', $name, get_string('review_access', 'scormlite'), scormlite_get_review_access_array());
+		$mform->addHelpButton($name, 'review_access', 'scormlite');
+		$mform->setDefault($name, $config->review_access);
+
 
 		// Hidden fields  ----------------------------------------------------------------------
 

@@ -124,7 +124,7 @@ class assessmentpath_test {
 		// Load SCO props
 		$prefix = self::Form_Prefix($is_remediation, true);
 		$this->scodata = new stdClass();
-		$sco_properties = array('id', 'containertype', 'scormtype', 'reference', 'sha1hash', 'revision', 'manualopen', 'maxtime', 'passingscore', 'popup', 'displaychrono');
+		$sco_properties = array('id', 'containertype', 'scormtype', 'reference', 'sha1hash', 'revision', 'manualopen', 'maxtime', 'passingscore', 'maxattempt', 'whatgrade', 'popup', 'displaychrono', 'review_access');
 		foreach ($sco_properties as $prop) {
 			if (isset($formdata->{$prefix.$prop}[$index])) {
 				$this->scodata->{$prop} = $formdata->{$prefix.$prop}[$index];

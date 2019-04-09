@@ -72,12 +72,13 @@ foreach ($steps as $step) {
 		$html_mystatus = $res[0];
 		$trackdata = $res[1];
 		if (!$test->data->remediation) {
+			$prectest = $test;
 			$prectrackdata = $trackdata;
 			$res = scormlite_get_availability($cm, $test->scodata, $trackdata);
 			$html_availability = $res[0];
 			$scormopen = $res[1];
 		} else {
-			$autoavailable = ($prectrackdata->status == 'failed');
+			$autoavailable = ($prectrackdata->status == 'failed' && $prectrackdata->attemptnb == $prectest->scodata->maxattempt);
 			$res = scormlite_get_availability($cm, $test->scodata, $trackdata, $autoavailable);
 			$html_availability = $res[0];
 			$scormopen = $res[1];
