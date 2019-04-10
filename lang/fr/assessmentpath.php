@@ -36,6 +36,7 @@ $string['page-mod-assessmentpath-x'] = 'Toutes les pages du module Assessment Pa
 // Permissions
 
 $string['assessmentpath:addinstance'] = 'Ajouter un nouveau parcours Assessment Path';
+$string['assessmentpath:notifycompletion'] = 'Recevoir les notifications de complétion';
 
 
 // Edit page
@@ -101,4 +102,16 @@ $string['step_filearea'] = '{$a->code}';
 $string['test_initial_filearea'] = 'Initial';
 $string['test_remediation_filearea'] = 'Remédiation';
 
-?>
+
+// Notifications
+
+$string['emailnotifybody'] = 'Bonjour {$a->username},
+
+{$a->studentname} a terminé \'{$a->activityname}\' ({$a->activityurl}) dans le cours \'{$a->coursename}\'.
+
+Vous pouvez suivre cette activité ici : {$a->activityreporturl}.';
+$string['emailnotifysmall'] = '{$a->studentname} has completed {$a->activityname}. See {$a->activityreporturl}';
+$string['emailnotifysubject'] = '{$a->studentname} has completed {$a->activityname}';
+
+$string['messageprovider:completion'] = 'Complétion des activités Assessment Path';
+

@@ -36,6 +36,7 @@ $string['page-mod-assessmentpath-x'] = 'Any Assessment Path module page';
 // Permissions
 
 $string['assessmentpath:addinstance'] = 'Add a new Assessment Path';
+$string['assessmentpath:notifycompletion'] = 'Receive completion notifications';
 
 // Edit page
 
@@ -100,4 +101,15 @@ $string['step_filearea'] = '{$a->code}';
 $string['test_initial_filearea'] = 'Initial';
 $string['test_remediation_filearea'] = 'Remedial';
 
-?>
+
+// Notifications
+
+$string['emailnotifybody'] = 'Hi {$a->username},
+
+{$a->studentname} has completed \'{$a->activityname}\' ({$a->activityurl}) in course \'{$a->coursename}\'.
+
+You can review this activity here: {$a->activityreporturl}.';
+$string['emailnotifysmall'] = '{$a->studentname} has completed {$a->activityname}. See {$a->activityreporturl}';
+$string['emailnotifysubject'] = '{$a->studentname} has completed {$a->activityname}';
+
+$string['messageprovider:completion'] = 'Assessment Path completion';

@@ -15,15 +15,17 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
-  *
+ *
  * ************************************************************* */
+
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017110805;            // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2017110800;            // Requires this Moodle version.
-$plugin->component = 'mod_assessmentpath';  // Full name of the plugin (used for diagnostics).
-$plugin->cron     = 300;          	        // How often should cron check this module (seconds)?
+$observers = array(
 
-
-
+    array(
+        'eventname' => '\core\event\course_module_completion_updated',
+        'includefile' => '/mod/assessmentpath/locallib.php',
+        'callback' => 'mod_assessmentpath_observer::course_module_completion_updated',
+    ),
+);

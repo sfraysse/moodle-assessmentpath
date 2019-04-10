@@ -15,15 +15,19 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
-  *
+ *
  * ************************************************************* */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017110805;            // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2017110800;            // Requires this Moodle version.
-$plugin->component = 'mod_assessmentpath';  // Full name of the plugin (used for diagnostics).
-$plugin->cron     = 300;          	        // How often should cron check this module (seconds)?
-
-
-
+$messageproviders = array (
+    
+    // Notify managers that a student has completed the assessment path
+    'completion' => array (
+        'capability'  => 'mod/assessmentpath:notifycompletion',
+        'defaults' => [
+            'popup' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+            'email' => MESSAGE_PERMITTED
+        ], 
+    ),
+);
