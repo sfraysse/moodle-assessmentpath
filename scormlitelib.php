@@ -33,22 +33,66 @@ function assessmentpath_get_activity_from_scoid($scoid) {
 // Returns the activity completion
 
 function assessmentpath_is_activity_completed($userid, $activity) {
-	global $CFG;
+	global $CFG, $DB;
 	require_once($CFG->dirroot.'/mod/assessmentpath/report/reportlib.php');
+
+	// Initial
 	$steps = array();
 	$scoids = assessmentpath_report_populate_steps($steps, $activity->id);
 	$scores = assessmentpath_report_get_scores($scoids, array($userid), false);
-	$completed = true;
+
+	// Remedial
+	$steps_remed = array();
+	$scoids_remed = assessmentpath_report_populate_steps($steps_remed, $activity->id, 1);
+	$scores_remed = assessmentpath_report_get_scores($scoids_remed, array($userid), false);
+
+	// No score at all for this user (check initial)
+	if (!array_key_exists($userid, $scores)) return false;
+
+	// Check scores for each step
 	foreach($steps as $stepid => $step) {
-		if (array_key_exists($userid, $scores) && array_key_exists($step->scoid, $scores[$userid])) {
-			// There is a score
-		} else {
-			// No score, not completed
-			$completed = false;
-			break;
-		}		
+
+		// No score for this step
+		if (!array_key_exists($step->scoid, $scores[$userid])) return false;
+
+		// Check initial
+		$tracks = scormlite_get_tracks($step->scoid, $userid);
+		if (empty($tracks)) return false;
+		$sco = $DB->get_record("scormlite_scoes", array("id" => $step->scoid), '*', MUST_EXIST);
+		if (!assessmentpath_is_test_completed($sco, $tracks)) return false;
+
+		// Success: no remedial
+		if ($tracks->success_status == "passed") continue;
+
+		// No remedial in the path
+		if (!isset($steps_remed[$stepid])) continue;
+
+		// Check remedial
+		$step_remed = $steps_remed[$stepid];
+		$tracks = scormlite_get_tracks($step_remed->scoid, $userid);
+		if (empty($tracks)) return false;
+		$sco = $DB->get_record("scormlite_scoes", array("id" => $step_remed->scoid), '*', MUST_EXIST);
+		if (!assessmentpath_is_test_completed($sco, $tracks)) return false;
 	}
-	return $completed;
+	return true;
+}
+
+// Returns the test completion
+
+function assessmentpath_is_test_completed($sco, $tracks)
+{
+	if ($sco->review_access < 2) {
+
+		// Default completion tracking
+		return $tracks->success_status == "passed"
+			|| $tracks->success_status == "failed"
+			|| $tracks->completion_status == "completed";
+	} else {
+
+		// Special rule
+		return $tracks->success_status == "passed"
+			|| $tracks->attemptnb == $sco->maxattempt;
+	}
 }
 
 // Returns the user grade for this activity or NULL if there is no grade to record
