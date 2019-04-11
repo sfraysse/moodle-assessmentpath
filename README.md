@@ -62,9 +62,7 @@ En dehors de ces réglages, on trouve :
 
 ## Consultation de l'activité
 
-L'activité `Assessment Path` présente l'intégralité du parcours, décomposé en étapes, puis en test initial vs test de remédiation.
-
-Le fonctionnement de chaque test est similaire au fonctionnement des activités SCORM Lite.
+L'activité `Assessment Path` présente l'intégralité du parcours, décomposé en étapes, puis en test initial vs test de remédiation. Le fonctionnement de chaque test est similaire au fonctionnement des activités SCORM Lite.
 
 
 ## Rapports de suivi
@@ -93,7 +91,7 @@ Pour activer la notification :
 
 2. Les utilisateurs souhaitant recevoir les notifications doivent avoir la permission `mod/assessmentpath:notifycompletion`. Par défaut, c'est le cas des rôles `Course Manager`, `Editing Teacher`, `Teacher`. 
 
-3. Les utilisateurs souhaitant recevoir les notifications doivent aller dans leur préférences : `Notification preferences` > `Assessment Path completion`; et activer le mode de notification souahité (Web et/ou Email).
+3. Les utilisateurs souhaitant recevoir les notifications doivent aller dans leur préférences : `Notification preferences` > `Assessment Path completion`; et activer le mode de notification souhaité (Web et/ou Email).
 
 Noter aussi que les notifications ne sont envoyées que lors de l'exécution de la tâche CRON de Moodle. Il peut donc y avoir un décalage plus ou moins important en fonction des paramétrages de la plateforme. 
 
