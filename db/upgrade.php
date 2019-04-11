@@ -49,7 +49,7 @@ function xmldb_assessmentpath_upgrade($oldversion=0) {
 	/**
 	 * Add a table to queue notifications.
 	 */
-	if ($oldversion < 2017110806) {
+	if ($oldversion < 2017110805) {
 
         // Define table assign_user_mapping to be created.
 		$table = new xmldb_table('assessmentpath_notif_queue');
@@ -66,7 +66,7 @@ function xmldb_assessmentpath_upgrade($oldversion=0) {
 
 		$dbman->create_table($table);
 
-		upgrade_mod_savepoint(true, 2017110806, 'assessmentpath');
+		upgrade_mod_savepoint(true, 2017110805, 'assessmentpath');
 	}
     
 	return true;
