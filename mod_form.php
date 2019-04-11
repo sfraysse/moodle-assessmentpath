@@ -308,6 +308,13 @@ class mod_assessmentpath_mod_form extends moodleform_mod {
 		$mform->addHelpButton($name, 'whatgrade', 'scormlite');
 		$mform->setDefault($name, $config->whatgrade);
 
+		// Lock attempts after success
+		$name = $scoprefix . 'lock_attempts_after_success[' . $i . ']';
+		$mform->addElement('selectyesno', $name, get_string('lock_attempts_after_success', 'scormlite'));
+		$mform->disabledIf($name, $scoprefix . 'maxattempt[' . $i . ']', 'eq', 1);
+		$mform->setDefault($name, $config->lock_attempts_after_success);
+		$mform->addHelpButton($name, 'lock_attempts_after_success', 'scormlite');
+
 		// Framed / Popup Window
 		$name = $scoprefix.'popup['.$i.']';
 		$mform->addElement('select', $name, get_string('display', 'scormlite'), scormlite_get_popup_display_array());

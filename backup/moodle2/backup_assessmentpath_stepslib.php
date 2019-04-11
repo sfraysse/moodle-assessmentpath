@@ -50,7 +50,8 @@ class backup_assessmentpath_activity_structure_step extends backup_activity_stru
 		$scoes = new backup_nested_element('scoes');
 		$sco = new backup_nested_element('sco', array('id'), array(
 			'containertype', 'scormtype', 'reference', 'sha1hash', 'md5hash', 'revision', 'timeopen', 'timeclose',
-			'manualopen', 'maxtime', 'passingscore', 'maxattempt', 'whatgrade', 'displaychrono', 'colors', 'popup', 'review_access'
+			'manualopen', 'maxtime', 'passingscore', 'maxattempt', 'whatgrade', 'lock_attempts_after_success', 'displaychrono', 
+			'colors', 'popup', 'review_access'
 		));
 
 		if ($userinfo) {
