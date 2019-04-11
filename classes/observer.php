@@ -23,7 +23,7 @@ defined('MOODLE_INTERNAL') || die();
 class mod_assessmentpath_observer {
 
     /**
-     * Undocumented function
+     * Activity completed.
      */
     public static function course_module_completion_updated(\core\event\course_module_completion_updated $event) {
         global $DB;
@@ -38,93 +38,22 @@ class mod_assessmentpath_observer {
         // Check completion status
         if ($eventdata->completionstate != COMPLETION_COMPLETE) return true;
 
-        // Message data
-        if (!$activity = $DB->get_record('assessmentpath', array('id' => $cm->instance))) return true;
-        if (!$course = $DB->get_record("course", array("id" => $cm->course))) return true;
-        if (!$user = $DB->get_record("user", array("id" => $eventdata->userid))) return true;
-
-        // Needed!
-        require_login($course->id, false, $cm);
-
-        return self::send_notifications(
-            $course,
-            $activity,
-            $user,
-            context_module::instance($cm->id),
-            $cm
-        );
-    }
-
-    /**
-     * Sends notifications.
-     */
-    public static function send_notifications($course, $activity, $submitter, $context, $cm)
-    {
-        global $CFG, $DB;
-
         // Get users to notify
+        $context = context_module::instance($cmid);
         $userstonotify = get_users_by_capability($context, 'mod/assessmentpath:notifycompletion');
         if (empty($userstonotify)) return true;
 
-        // Prepare template data
-        $a = new stdClass();
-
-        // Course info.
-        $a->courseid = $course->id;
-        $a->coursename = $course->fullname;
-        $a->courseshortname = $course->shortname;
-
-        // activity info.
-        $a->activityname = $activity->name;
-        $a->activityreporturl = $CFG->wwwroot . '/mod/assessmentpath/report/P3.php?id=' . $cm->id;
-        $a->activityreportlink = '<a href="' . $a->activityreporturl . '">' . $a->activityname . ' </a>';
-        $a->activityurl = $CFG->wwwroot . '/mod/assessmentpath/view.php?id=' . $cm->id;
-        $a->activitylink = '<a href="' . $a->activityurl . '">' . format_string($activity->name) . '</a>';
-
-        // Student who sat the activity info.
-        $a->studentidnumber = $submitter->idnumber;
-        $a->studentname = fullname($submitter);
-        $a->studentusername = $submitter->username;
-
-        // Send notifications.
-        $allok = true;
+        // Queue the notifications
         foreach ($userstonotify as $recipient) {
-            $allok = $allok && self::send_notification($recipient, $submitter, $a);
+            $record = new StdClass();
+            $record->cmid = $cmid;
+            $record->submitterid = $eventdata->userid;
+            $record->recipientid = $recipient->id;
+            $record->notification = 'completion';
+            $DB->insert_record('assessmentpath_notif_queue', $record);
         }
-        return $allok;
+
+        return true;
     }
-
-    /**
-     * Sends notification message.
-     */
-    public static function send_notification($recipient, $submitter, $a)
-    {
-        // Recipient info for template.
-        $a->useridnumber = $recipient->idnumber;
-        $a->username = fullname($recipient);
-        $a->userusername = $recipient->username;
-
-        // Prepare the message.
-        $eventdata = new \core\message\message();
-        $eventdata->courseid = $a->courseid;
-        $eventdata->component = 'mod_assessmentpath';
-        $eventdata->name = 'completion';
-        $eventdata->notification = 1;
-
-        $eventdata->userfrom = $submitter;
-        $eventdata->userto = $recipient;
-        $eventdata->subject = get_string('emailnotifysubject', 'assessmentpath', $a);
-        $eventdata->fullmessage = get_string('emailnotifybody', 'assessmentpath', $a);
-        $eventdata->fullmessageformat = FORMAT_PLAIN;
-        $eventdata->fullmessagehtml = '';
-
-        $eventdata->smallmessage = get_string('emailnotifysmall', 'assessmentpath', $a);
-        $eventdata->contexturl = $a->activityreporturl;
-        $eventdata->contexturlname = $a->activityname;
-
-        // ... and send it.
-        return message_send($eventdata);
-    }
-
 
 }

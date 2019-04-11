@@ -52,13 +52,26 @@
 			</INDEXES>
 		</TABLE>
 
-		<TABLE NAME="assessmentpath_comments" COMMENT="" PREVIOUS="assessmentpath_tests">
+		<TABLE NAME="assessmentpath_comments" COMMENT="" PREVIOUS="assessmentpath_tests" NEXT="assessmentpath_notif_queue">
 			<FIELDS>
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="contexttype" COMMENT=""/>
 				<FIELD NAME="contexttype" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" DEFAULT="0" COMMENT="Identifies the type of context in which the comment is registered. 1 for an assessmentpath, 2 for a test" PREVIOUS="id" NEXT="contextid" />
 				<FIELD NAME="contextid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="contexttype" NEXT="userid" COMMENT="Id the record in the context of which this comment exists"/>
 				<FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="contextid" NEXT="comment" COMMENT="Optional user id"/>
 				<FIELD NAME="comment" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" COMMENT="General introduction of the RTWS activity" PREVIOUS="userid" />
+			</FIELDS>
+			<KEYS>
+				<KEY NAME="primary" TYPE="primary" FIELDS="id" />
+			</KEYS>
+		</TABLE>
+
+		<TABLE NAME="assessmentpath_notif_queue" COMMENT="" PREVIOUS="assessmentpath_comments">
+			<FIELDS>
+				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="cmid" COMMENT=""/>
+				<FIELD NAME="cmid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="submitterid" COMMENT=""/>
+				<FIELD NAME="submitterid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="cmid" NEXT="recipientid" COMMENT=""/>
+				<FIELD NAME="recipientid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="submitterid" NEXT="notification" COMMENT=""/>
+				<FIELD NAME="notification" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="recipientid" COMMENT="" />
 			</FIELDS>
 			<KEYS>
 				<KEY NAME="primary" TYPE="primary" FIELDS="id" />

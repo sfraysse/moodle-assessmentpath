@@ -15,15 +15,28 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
-  *
+ *
  * ************************************************************* */
 
-defined('MOODLE_INTERNAL') || die();
+namespace mod_assessmentpath\task;
 
-$plugin->version   = 2017110809;            // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2017110800;            // Requires this Moodle version.
-$plugin->component = 'mod_assessmentpath';  // Full name of the plugin (used for diagnostics).
-$plugin->cron     = 300;          	        // How often should cron check this module (seconds)?
+class cron_task_notifications_queue extends \core\task\scheduled_task  {
 
+    /**
+     * Return the task's name as shown in admin screens.
+     */
+    public function get_name()
+    {
+        return get_string('crontask_notifications_queue', 'mod_assessmentpath');
+    }
+    
+    /**
+     * Run forum cron.
+     */
+    public function execute() {
+        global $CFG;
+        require_once($CFG->dirroot . '/mod/assessmentpath/cronlib.php');
+        assessmentpath_cron();
+    }
 
-
+}

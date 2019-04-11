@@ -15,15 +15,19 @@
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
-  *
+ *
  * ************************************************************* */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2017110809;            // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2017110800;            // Requires this Moodle version.
-$plugin->component = 'mod_assessmentpath';  // Full name of the plugin (used for diagnostics).
-$plugin->cron     = 300;          	        // How often should cron check this module (seconds)?
-
-
-
+$tasks = array(
+    array(
+        'classname' => 'mod_assessmentpath\task\cron_task_notifications_queue',
+        'blocking' => 0,
+        'minute' => '*',
+        'hour' => '*',
+        'day' => '*',
+        'dayofweek' => '*',
+        'month' => '*'
+    ),
+);

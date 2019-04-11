@@ -106,10 +106,11 @@ $string['test_remediation_filearea'] = 'Remedial';
 
 $string['emailnotifybody'] = 'Hi {$a->username},
 
-{$a->studentname} has completed \'{$a->activityname}\' ({$a->activityurl}) in course \'{$a->coursename}\'.
+{$a->studentname} has completed the Assessment Path activity named \'{$a->activityname}\' ({$a->activityurl}) in course \'{$a->coursename}\'.
 
 You can review this activity here: {$a->activityreporturl}.';
 $string['emailnotifysmall'] = '{$a->studentname} has completed {$a->activityname}. See {$a->activityreporturl}';
 $string['emailnotifysubject'] = '{$a->studentname} has completed {$a->activityname}';
 
 $string['messageprovider:completion'] = 'Assessment Path completion';
+$string['crontask_notifications_queue'] = 'Assessment Path notifications queue';
