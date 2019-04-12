@@ -1,4 +1,12 @@
-> **Assessment Path 3.4.5** est un plugin pour Moodle 3.4 permettant la conception de parcours d'évaluation avec tests initiaux et tests de remédiation. Les évaluations sont des contenus SCORM Lite (cf http://scormlite.com).
+> **Assessment Path** est un plugin pour Moodle permettant la conception de parcours d'évaluation avec tests initiaux et tests de remédiation. Les évaluations sont des contenus SCORM Lite (cf http://scormlite.com).
+
+
+# Versions
+
+Vous êtes sur la page de la **version 3.4.5** du plugin Assessment Path, dernière version compatible avec **Moodle 3.4**.
+
+Ce plugin n'existe pas encore pour les versions plus récentes de Moodle.
+
 
 # Installation
 
