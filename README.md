@@ -14,7 +14,7 @@ Ce plugin n'existe pas encore pour les versions plus récentes de Moodle.
 ## Pré-requis
 
 - Moodle version 3.4.x
-- [SCORM Lite 3.4.5](https://github.com/sfraysse/moodle-scormlite/tree/v3.4.5)
+- [SCORM Lite 3.4.5](https://github.com/sfraysse/moodle-scormlite/tree/3.4)
 
 
 ## Procédure d'installation
