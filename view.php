@@ -68,7 +68,7 @@ foreach ($steps as $step) {
 	$stepstart = false;
 	foreach ($step->tests as $test) {
 		// Data
-		$res = scormlite_get_mystatus($cm, $test->scodata);
+		$res = scormlite_get_mystatus($cm, $test->scodata, true);
 		$html_mystatus = $res[0];
 		$trackdata = $res[1];
 		if (!$test->data->remediation) {

@@ -176,9 +176,9 @@ function assessmentpath_report_sort_course_activities($activities, $courseid) {
 
 function assessmentpath_report_populate_user_results(&$activities, &$user, $scoids, $closedonly = true) {
 	$userids = array($user->id);
-	$scores = assessmentpath_report_get_scores($scoids, $userids, $closedonly);
-	if (array_key_exists($user->id, $scores)) $scores = $scores[$user->id];
-	else $scores = array();
+	$attempts = assessmentpath_report_get_attempts($scoids, $userids, $closedonly);
+	if (array_key_exists($user->id, $attempts)) $attempts = $attempts[$user->id];
+	else $attempts = array();
 	// Populate data
 	foreach ($activities as $activityid => $activity) {
 		$activity->initial_scores = array(); 
@@ -188,17 +188,19 @@ function assessmentpath_report_populate_user_results(&$activities, &$user, $scoi
 		// Initial steps
 		$steps = $activity->initial_tests;			
 		foreach ($steps as $stepid => $step) {
-			if (array_key_exists($step->scoid, $scores)) {
-				$score = $scores[$step->scoid];
-				if (isset($score)) $activity->initial_scores[$stepid] = $score;
+			if (array_key_exists($step->scoid, $attempts)) {
+				if (isset($attempts[$step->scoid]->score_display)) {
+					$activity->initial_scores[$stepid] = $attempts[$step->scoid]->score_display;
+				}
 			}
 		}
 		// Remediation steps
 		$steps = $activity->remediation_tests;			
 		foreach ($steps as $stepid => $step) {
-			if (array_key_exists($step->scoid, $scores)) {
-				$score =$scores[$step->scoid];
-				if (isset($score)) $activity->remediation_scores[$stepid] = $score;
+			if (array_key_exists($step->scoid, $attempts)) {
+				if (isset($attempts[$step->scoid]->score_display)) {
+					$activity->remediation_scores[$stepid] = $attempts[$step->scoid]->score_display;
+				}
 			}
 		}
 		// Averages
@@ -218,7 +220,7 @@ function assessmentpath_report_populate_activity_results(&$steps, &$users, $scoi
 }
 
 function assessmentpath_report_populate_users_results(&$contents, &$users, $scoids, $userids, $closedonly = true, $contentchildren = '') {
-	$scores = assessmentpath_report_get_scores($scoids, $userids, $closedonly);
+	$attempts = assessmentpath_report_get_attempts($scoids, $userids, $closedonly);
 	// Populate data
 	$global_avg = null;
 	$global_scores = array();
@@ -236,11 +238,13 @@ function assessmentpath_report_populate_users_results(&$contents, &$users, $scoi
 			// Get score
 			if (empty($contentchildren)) {
 				$score = null;
-				if (array_key_exists($userid, $scores) && array_key_exists($content->scoid, $scores[$userid])) {
-					$score = $scores[$userid][$content->scoid];
+				if (array_key_exists($userid, $attempts) && array_key_exists($content->scoid, $attempts[$userid])) {
+					if (isset($attempts[$userid][$content->scoid]->score_display)) {
+						$score = $attempts[$userid][$content->scoid]->score_display;
+					}
 				}
 			} else {
-				$score = assessmentpath_report_get_average_score($content->{$contentchildren}, $userid, $scores);
+				$score = assessmentpath_report_get_average_score($content->{$contentchildren}, $userid, $attempts);
 			}
 			// Average per user+content
 			if (isset($score)) {
@@ -278,7 +282,8 @@ function assessmentpath_report_populate_users_results(&$contents, &$users, $scoi
 }
 
 function assessmentpath_report_populate_course_progress(&$activities, &$users, $scoids, $userids) {
-	$scores = assessmentpath_report_get_scores($scoids, $userids);
+	global $DB;
+	$attempts = assessmentpath_report_get_attempts($scoids, $userids);
 	// Statistics
 	$statistics = new stdClass();
 	$statistics->number = 0;
@@ -293,13 +298,16 @@ function assessmentpath_report_populate_course_progress(&$activities, &$users, $
 			// Search for the first user result (if one, it means that the test is closed)
 			$found = false;
 			$scoid = $step->scoid;
-			foreach ($scores as $userid => $scos) {
-				if (array_key_exists($scoid, $scos)) {
-					if (isset($scos[$scoid])) {
-						$found = true;
-						$statistics->completed += 1;
-						$completed += 1;
-						break;
+			$sco = $DB->get_record("scormlite_scoes", array("id" => $scoid), '*', MUST_EXIST);
+			if ($sco->manualopen == 2 || ($sco->manualopen == 0 && time() > $sco->timeclose)) {
+				foreach ($attempts as $userid => $scos) {
+					if (array_key_exists($scoid, $scos)) {
+						if (isset($scos[$scoid]->score_display)) {
+							$found = true;
+							$statistics->completed += 1;
+							$completed += 1;
+							break;
+						}
 					}
 				}
 			}
@@ -321,7 +329,7 @@ function assessmentpath_report_populate_course_progress(&$activities, &$users, $
 }
 
 function assessmentpath_report_populate_step_results($step, $users, $scoids, $userids, $closedonly = true) {
-	$scores = assessmentpath_report_get_scores($scoids, $userids, $closedonly);
+	$attempts = assessmentpath_report_get_attempts($scoids, $userids, $closedonly);
 	// Statistics
 	$scores_remediation_beforeremediation = array();
 	$scores_remediation_afterremediation = array();
@@ -331,16 +339,28 @@ function assessmentpath_report_populate_step_results($step, $users, $scoids, $us
 	foreach ($users as $userid => $user) {
 		// Initial score
 		$user->initial_score = null;
-		if (array_key_exists($userid, $scores) && array_key_exists($step->initial_scoid, $scores[$userid])) {
-			$user->initial_score = $scores[$userid][$step->initial_scoid];
+		if (array_key_exists($userid, $attempts) && array_key_exists($step->initial_scoid, $attempts[$userid])) {
+			$attempt = $attempts[$userid][$step->initial_scoid];
+			if (isset($attempt->attempt)) {
+				$user->initial_attempt = $attempt->attempt . '/' . $attempt->attemptnb;
+			}
+			if (isset($attempt->score_display)) {
+				$user->initial_score = $attempt->score_display;
+			}
 		}
 		if (!$user->trainer) { // Do not include trainers
 			$user->scorerank = $user->initial_score;
 		}
 		// Remediation score
 		$user->remediation_score = null;
-		if (isset($step->remediation_scoid) && array_key_exists($userid, $scores) && array_key_exists($step->remediation_scoid, $scores[$userid])) {
-			$user->remediation_score = $scores[$userid][$step->remediation_scoid];
+		if (isset($step->remediation_scoid) && array_key_exists($userid, $attempts) && array_key_exists($step->remediation_scoid, $attempts[$userid])) {
+			$attempt = $attempts[$userid][$step->remediation_scoid];
+			if (isset($attempt->attempt)) {
+				$user->remediation_attempt = $attempt->attempt . '/' . $attempt->attemptnb;
+			}
+			if (isset($attempt->score_display)) {
+				$user->remediation_score = $attempt->score_display;
+			}
 		}
 		// Statistics
 		if (!$user->trainer) {
@@ -370,34 +390,31 @@ function assessmentpath_report_populate_step_results($step, $users, $scoids, $us
 	return $statistics;
 }
 
-function assessmentpath_report_get_scores($scoids, $userids, $closedonly = true) {
+function assessmentpath_report_get_attempts($scoids, $userids, $closedonly = true)
+{
 	if (empty($userids) || empty($scoids)) return array();
-	global $DB;
-	$strscoids = implode(',', $scoids);
-	$struserids = implode(',', $userids);
-	$sql = "
-		SELECT SST.id, SST.userid, SS.id AS scoid, SST.value AS score, SS.timeclose, SS.manualopen
-		FROM {scormlite_scoes} SS
-		INNER JOIN {scormlite_scoes_track} SST ON SST.scoid=SS.id
-		WHERE (SS.id IN ($strscoids)) AND (SST.userid IN ($struserids)) AND (SST.element='cmi.score.scaled')";
-	$records = $DB->get_recordset_sql($sql);
-	// Collect scores[userid][scoid]
-	$scores = array();
-	foreach ($records as $record) {
-		if (!array_key_exists($record->userid, $scores)) $scores[$record->userid] = array();
-		if (!array_key_exists($record->scoid, $scores[$record->userid])) $scores[$record->userid][$record->scoid] = null;
-		$scores[$record->userid][$record->scoid] = floatval($record->score)*100;
+	$res = [];
+	foreach($scoids as $scoid) {
+		$attempts = scormlite_get_tracks($scoid);
+		if (!$attempts) continue;
+		foreach ($attempts as $userid => $attempt) {
+			if (isset($attempt->score_scaled)) {
+				$attempt->score_display = floatval($attempt->score_scaled) * 100;
+			}
+			if (!isset($res[$userid])) $res[$userid] = [];
+			$res[$userid][$scoid] = $attempt;
+		}
 	}
-	return $scores;
+	return $res;
 }
 
-function assessmentpath_report_get_average_score($contents, $userid, $scores) {
+function assessmentpath_report_get_average_score($contents, $userid, $attempts) {
 	// Steps
 	$myscores = array();
 	$avg = null;
 	foreach ($contents as $contentid => $content) {
-		if (array_key_exists($userid, $scores) && array_key_exists($content->scoid, $scores[$userid])) {
-			$score = $scores[$userid][$content->scoid];
+		if (array_key_exists($userid, $attempts) && array_key_exists($content->scoid, $attempts[$userid])) {
+			$score = $attempts[$userid][$content->scoid]->score_display;
 			if (isset($score)) $myscores[$contentid] = $score;
 		}
 	}
@@ -650,8 +667,15 @@ class assessmentpath_report_table {
 							$review_link = null;
 							$reviewallowed = has_capability('mod/scormlite:reviewothercontent', $this->context);	
 							if ($reviewallowed) $review_link = scormlite_report_get_link_review($this->content->initial_scoid, $user->id, $this->url);
-							if ($links == true)	$row[] = array('score' => sprintf("%01.1f", $user->initial_score), 'colors' => $this->colors, 'link' => $review_link);
-							else $row[] = array('score' => sprintf("%01.1f", $user->initial_score), 'colors' => $this->colors);
+							if ($links == true) {
+								$cell = array('score' => sprintf("%01.1f", $user->initial_score), 'colors' => $this->colors, 'link' => $review_link);
+							} else {
+								$cell = array('score' => sprintf("%01.1f", $user->initial_score), 'colors' => $this->colors);
+							}
+							if (isset($user->initial_attempt)) {
+								$cell['attempt'] = $user->initial_attempt;
+							}
+							$row[] = $cell;
 						} else {
 							$row[] = '';
 						}
@@ -660,8 +684,15 @@ class assessmentpath_report_table {
 							$review_link = null;
 							$reviewallowed = has_capability('mod/scormlite:reviewothercontent', $this->context);	
 							if ($reviewallowed) $review_link = scormlite_report_get_link_review($this->content->remediation_scoid, $user->id, $this->url);
-							if ($links == true)	$row[] = array('score' => sprintf("%01.1f", $user->remediation_score), 'colors' => $this->colors, 'link' => $review_link);
-							else $row[] = array('score' => sprintf("%01.1f", $user->remediation_score), 'colors' => $this->colors);
+							if ($links == true) {
+								$cell = array('score' => sprintf("%01.1f", $user->remediation_score), 'colors' => $this->colors, 'link' => $review_link);
+							} else { 
+								$cell = array('score' => sprintf("%01.1f", $user->remediation_score), 'colors' => $this->colors);
+							}
+							if (isset($user->remediation_attempt)) {
+								$cell['attempt'] = $user->remediation_attempt;
+							}
+							$row[] = $cell;
 						} else {
 							$row[] = '';
 						}

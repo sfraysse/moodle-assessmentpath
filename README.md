@@ -21,7 +21,7 @@ Ce plugin n'existe pas encore pour les versions plus récentes de Moodle.
 
 ### Plugin principal
 
-- Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v3.4.5.zip.
+- Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v3.4.6.zip.
 - Dans `Moodle > Administration > Plugins > Install plugins`, importer le fichier ZIP du plugin.
 - Suivre la procédure d'installation.
 

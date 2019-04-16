@@ -39,21 +39,20 @@ function assessmentpath_is_activity_completed($userid, $activity) {
 	// Initial
 	$steps = array();
 	$scoids = assessmentpath_report_populate_steps($steps, $activity->id);
-	$scores = assessmentpath_report_get_scores($scoids, array($userid), false);
+	$attempts = assessmentpath_report_get_attempts($scoids, array($userid), false);
 
 	// Remedial
 	$steps_remed = array();
 	$scoids_remed = assessmentpath_report_populate_steps($steps_remed, $activity->id, 1);
-	$scores_remed = assessmentpath_report_get_scores($scoids_remed, array($userid), false);
 
 	// No score at all for this user (check initial)
-	if (!array_key_exists($userid, $scores)) return false;
+	if (!array_key_exists($userid, $attempts)) return false;
 
 	// Check scores for each step
 	foreach($steps as $stepid => $step) {
 
 		// No score for this step
-		if (!array_key_exists($step->scoid, $scores[$userid])) return false;
+		if (!array_key_exists($step->scoid, $attempts[$userid])) return false;
 
 		// Check initial
 		$tracks = scormlite_get_tracks($step->scoid, $userid);
@@ -102,13 +101,15 @@ function assessmentpath_get_grade($userid, $activity) {
 	require_once($CFG->dirroot.'/mod/assessmentpath/report/reportlib.php');
 	$steps = array();
 	$scoids = assessmentpath_report_populate_steps($steps, $activity->id);
-	$scores = assessmentpath_report_get_scores($scoids, array($userid), false);
+	$attempts = assessmentpath_report_get_attempts($scoids, array($userid), false);
 	$completed = true;
 	$foravg = array();
 	foreach($steps as $stepid => $step) {
-		if (array_key_exists($userid, $scores) && array_key_exists($step->scoid, $scores[$userid])) {
+		if (array_key_exists($userid, $attempts) && array_key_exists($step->scoid, $attempts[$userid])) {
 			// There is a score
-			$foravg[] = $scores[$userid][$step->scoid];
+			if (isset($attempts[$userid][$step->scoid]->score_display)) {
+				$foravg[] = $attempts[$userid][$step->scoid]->score_display;
+			}
 		} else {
 			// No score, not completed
 			$completed = false;
