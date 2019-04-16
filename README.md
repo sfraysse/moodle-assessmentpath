@@ -19,9 +19,19 @@ Ce plugin n'existe pas encore pour les versions plus récentes de Moodle.
 
 ## Procédure d'installation
 
+### Plugin principal
+
 - Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v3.4.5.zip.
 - Dans `Moodle > Administration > Plugins > Install plugins`, importer le fichier ZIP du plugin.
 - Suivre la procédure d'installation.
+
+### Plugins complémentaires
+
+Bien que complémentaires, l'installation de ces plugins est **obligatoire** pour assurer le bon fonctionnement d'Assessment Path. Répéter la procédure d'installation pour les plugins :
+
+- Bloc Assessment Path : [dernière version](https://github.com/sfraysse/moodle-assessmentpath-block/archive/v3.4.0.zip)
+- Rapport de cours Assessment Path : [dernière version](https://github.com/sfraysse/moodle-assessmentpath-report/archive/v3.4.0.zip)
+
 
 
 ## Paramétrage général du plugin
