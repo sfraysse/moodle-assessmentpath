@@ -3,7 +3,7 @@
 
 # Versions
 
-Vous êtes sur la page de la **version 3.4.5** du plugin Assessment Path, dernière version compatible avec **Moodle 3.4**.
+Vous êtes sur la page de la **version 3.4.6** du plugin Assessment Path, dernière version compatible avec **Moodle 3.4**.
 
 Ce plugin n'existe pas encore pour les versions plus récentes de Moodle.
 
@@ -14,7 +14,7 @@ Ce plugin n'existe pas encore pour les versions plus récentes de Moodle.
 ## Pré-requis
 
 - Moodle version 3.4.x
-- [SCORM Lite 3.4.5+](https://github.com/sfraysse/moodle-scormlite/tree/3.4)
+- [SCORM Lite 3.4.6+](https://github.com/sfraysse/moodle-scormlite/tree/3.4)
 
 
 ## Procédure d'installation
