@@ -5,7 +5,9 @@
 
 Vous êtes sur la page de la **version 3.4.6** du plugin Assessment Path, dernière version compatible avec **Moodle 3.4**.
 
-Ce plugin n'existe pas encore pour les versions plus récentes de Moodle.
+Ce plugin existe aussi pour les versions suivantes de Moodle :
+- **Moodle 3.5** : [AssessmentPath 3.5](https://github.com/sfraysse/moodle-assessmentpath/tree/3.5)
+- **Moodle 3.6** : [AssessmentPath 3.6](https://github.com/sfraysse/moodle-assessmentpath/tree/3.6)
 
 
 # Installation
