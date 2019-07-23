@@ -47,6 +47,7 @@ $string['stepstab'] = 'Edition des étapes';
 $string['step'] = 'Etape';
 $string['steps'] = 'Etapes';
 $string['test'] = 'Test';
+$string['tests'] = 'Tests';
 $string['initial'] = 'Initial';
 $string['remediation'] = 'Remédiation';
 $string['initialtest'] = 'Test initial';
@@ -115,4 +116,5 @@ $string['emailnotifysubject'] = '{$a->studentname} has completed {$a->activityna
 
 $string['messageprovider:completion'] = 'Complétion des activités Assessment Path';
 $string['crontask_notifications_queue'] = 'Pile des notifications pour les activités Assessment Path';
+
 
