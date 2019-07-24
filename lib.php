@@ -510,7 +510,7 @@ function assessmentpath_extend_settings_navigation(settings_navigation $settings
  */
 function assessmentpath_reset_course_form_definition(&$mform) {
 	$mform->addElement('header', 'scormheader', get_string('modulenameplural', 'assessmentpath'));
-	$mform->addElement('advcheckbox', 'reset_assessmentpath', get_string('deletealltracks','scormlite'));
+	$mform->addElement('advcheckbox', 'reset_assessmentpath', get_string('delete_tracks_and_comments', 'assessmentpath'));
 }
 
 /**
@@ -556,7 +556,11 @@ function assessmentpath_reset_gradebook($courseid, $type='') {
 function assessmentpath_reset_userdata($data) {
 	$status = array();
 	if (!empty($data->reset_assessmentpath)) {
-		// Delete
+
+		global $CFG;
+		require_once($CFG->dirroot . '/mod/assessmentpath/report/reportlib.php');
+
+		// SCORM Lite tracks
 		$sql = '
 			DELETE SST
 			FROM {scormlite_scoes_track} SST
@@ -567,14 +571,34 @@ function assessmentpath_reset_userdata($data) {
 			WHERE CM.course=?';
 		global $DB;
 		$DB->execute($sql, array($data->courseid));
+
+		// Activity comments
+		$sql = '
+			DELETE COMMENT
+			FROM {assessmentpath_comments} COMMENT
+			INNER JOIN {assessmentpath} A ON A.id=COMMENT.contextid
+			INNER JOIN {course_modules} CM ON CM.instance=A.id
+			WHERE CM.course=? AND COMMENT.contexttype = ' . COMMENT_CONTEXT_USER_PATH;
+		global $DB;
+		$DB->execute($sql, array($data->courseid));
+
+		// Course comments
+		$sql = '
+			DELETE COMMENT
+			FROM {assessmentpath_comments} COMMENT
+			WHERE COMMENT.contextid=? AND COMMENT.contexttype = ' . COMMENT_CONTEXT_USER_COURSE;
+		global $DB;
+		$DB->execute($sql, array($data->courseid));
+
 		// Grades
         if (empty($data->reset_gradebook_grades)) {
             assessmentpath_reset_gradebook($data->courseid);
-        }
+		}
+		
 		// Status
 		$status[] = array(
 			'component' => get_string('modulenameplural', 'assessmentpath'),
-			'item' => get_string('deletealltracks', 'scormlite'),
+			'item' => get_string('delete_tracks_and_comments', 'assessmentpath'),
 			'error' => false);
 	}
 	return $status;

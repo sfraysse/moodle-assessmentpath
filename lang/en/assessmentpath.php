@@ -87,6 +87,11 @@ $string['back'] = 'Back';
 $string['statistics'] = 'Quetzal Statistics';
 
 
+// Reset
+
+$string['delete_tracks_and_comments'] = 'Delete all tracks and comments';
+
+
 // Comments
 
 $string['savecomments'] = 'Save comments';
