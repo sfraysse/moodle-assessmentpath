@@ -157,8 +157,11 @@ class provider implements
                     ON test.sco = sst.scoid
                   JOIN {assessmentpath_steps} step
                     ON step.id = test.step
+                  JOIN {modules} m
+                    ON m.name = 'assessmentpath'
                   JOIN {course_modules} cm
                     ON cm.instance = step.activity
+                   AND cm.module = m.id
                   JOIN {context} ctx
                     ON ctx.instanceid = cm.id
                  WHERE ctx.id $insql
@@ -177,17 +180,16 @@ class provider implements
         }
         $scoestracks->close();
 
-        // The scoes_track data is organised in: {Course name}/{AssessmentPath activity name}/{Step code}/{Initial or Remedial}/{Attempt X}/data.json
-        // where X is the attempt number.
+        // Push in folders
         array_walk($alldata, function ($stepsdata, $contextid) {
             $context = \context::instance_by_id($contextid);
-
             array_walk($stepsdata, function ($stepdata, $rank) use ($context) {
                 array_walk($stepdata, function ($testdata, $remediation) use ($context, $rank) {
                     array_walk($testdata, function ($attemptdata, $attempt) use ($context, $rank, $remediation) {
                         $subcontext = [
                             get_string('steps', 'assessmentpath'),
-                            get_string('tests', 'assessmentpath'),
+                            get_string('step', 'assessmentpath') . ' ' . ($rank+1),
+                            $remediation ? get_string('remediationtest', 'assessmentpath') : get_string('initialtest', 'assessmentpath'),
                             get_string('myattempts', 'scorm'),
                             get_string('attempt', 'scorm') . " $attempt"
                         ];
@@ -199,7 +201,6 @@ class provider implements
                 });
             });
         });
-
     }
 
     /**
@@ -302,7 +303,7 @@ class provider implements
                     ON m.name = 'assessmentpath'
                 JOIN {course_modules} cm
                     ON cm.instance = step.activity
-                AND cm.module = m.id
+                   AND cm.module = m.id
                 JOIN {context} ctx
                     ON ctx.instanceid = cm.id
                 WHERE ctx.id = :contextid
