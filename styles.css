@@ -1,4 +1,11 @@
 
+/* --------------- Moodle 3.5 --------------- */
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 500 !important;
+}
+
+
 /* --------------- Steps layout --------------- */
 
 .path-mod-assessmentpath #steps,
@@ -478,24 +485,15 @@
     border-right: none;
 }
 #page-mod-assessmentpath-view #region-main .step .stepsettings {
-    background: url([[pix:theme|page/arrow_grey]]) 0 0 no-repeat;
     margin: 0;
     padding-left: 40px;
     padding-top: 3px;
-}
-#page-mod-assessmentpath-view #region-main .step.start .stepsettings {
-    background: url([[pix:theme|page/arrow_green]]) 0 0 no-repeat;
-}
-#page-mod-assessmentpath-view #region-main .step.closed .stepsettings {
-    background: url([[pix:theme|page/arrow_lightgrey]]) 0 0 no-repeat;
 }
 #page-mod-assessmentpath-view #region-main .step .stepsettings h4 {
     font-size: 1.2em;
 }
 #page-mod-assessmentpath-view #region-main .step.closed .stepsettings h4 {
     color: #999;
-}
-#page-mod-assessmentpath-view #region-main .step .stepsettings h4 span {
 }
 #page-mod-assessmentpath-view #region-main .step .stepsettings h4 {
     margin: 10px 0 10px 10px;
@@ -536,16 +534,9 @@
     float: right;
 }
 #page-mod-assessmentpath-view #region-main .step .sep {
-    background: url([[pix:theme|page/arrow_right_grey]]) right center no-repeat;
     height: 100px;
     float: left;
     width: 10%;
-}
-#page-mod-assessmentpath-view #region-main .step .sep.start {
-    background: url([[pix:theme|page/arrow_right_green]]) center center no-repeat;
-}
-#page-mod-assessmentpath-view #region-main .step.closed .sep {
-    background: url([[pix:theme|page/arrow_right_lightgrey]]) center center no-repeat;
 }
 #page-mod-assessmentpath-view #region-main .step .testsettings h5 {
     font-size: 1.2em;
