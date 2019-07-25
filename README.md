@@ -3,11 +3,11 @@
 
 # Versions
 
-Vous êtes sur la page de la **version 3.5.0** du plugin Assessment Path, dernière version compatible avec **Moodle 3.5**.
+Vous êtes sur la page de la **version 3.6.0** du plugin Assessment Path, dernière version compatible avec **Moodle 3.6**.
 
 Ce plugin existe aussi pour les versions suivantes de Moodle :
 - **Moodle 3.4** : [AssessmentPath 3.4](https://github.com/sfraysse/moodle-assessmentpath/tree/3.4)
-- **Moodle 3.6** : [AssessmentPath 3.6](https://github.com/sfraysse/moodle-assessmentpath/tree/3.6)
+- **Moodle 3.5** : [AssessmentPath 3.5](https://github.com/sfraysse/moodle-assessmentpath/tree/3.5)
 
 
 # Installation
@@ -15,15 +15,15 @@ Ce plugin existe aussi pour les versions suivantes de Moodle :
 
 ## Pré-requis
 
-- Moodle version 3.5.x
-- [SCORM Lite 3.5.1+](https://github.com/sfraysse/moodle-scormlite/tree/3.5)
+- Moodle version 3.6.x
+- [SCORM Lite 3.6.1+](https://github.com/sfraysse/moodle-scormlite/tree/3.6)
 
 
 ## Procédure d'installation
 
 ### Plugin principal
 
-- Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v3.5.0.zip.
+- Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v3.6.0.zip.
 - Dans `Moodle > Administration > Plugins > Install plugins`, importer le fichier ZIP du plugin.
 - Suivre la procédure d'installation.
 
@@ -31,8 +31,8 @@ Ce plugin existe aussi pour les versions suivantes de Moodle :
 
 Bien que complémentaires, l'installation de ces plugins est **obligatoire** pour assurer le bon fonctionnement d'Assessment Path. Répéter la procédure d'installation pour les plugins :
 
-- Bloc Assessment Path : [dernière version](https://github.com/sfraysse/moodle-assessmentpath-block/archive/v3.5.0.zip)
-- Rapport Assessment Path : [dernière version](https://github.com/sfraysse/moodle-assessmentpath-report/archive/v3.5.0.zip)
+- Bloc Assessment Path : [dernière version](https://github.com/sfraysse/moodle-assessmentpath-block/archive/v3.6.0.zip)
+- Rapport Assessment Path : [dernière version](https://github.com/sfraysse/moodle-assessmentpath-report/archive/v3.6.0.zip)
 
 
 
