@@ -31,8 +31,8 @@ Ce plugin existe aussi pour les versions suivantes de Moodle :
 
 Bien que complémentaires, l'installation de ces plugins est **obligatoire** pour assurer le bon fonctionnement d'Assessment Path. Répéter la procédure d'installation pour les plugins :
 
-- Bloc Assessment Path : [dernière version](https://github.com/sfraysse/moodle-assessmentpath-block/archive/v3.6.0.zip)
-- Rapport Assessment Path : [dernière version](https://github.com/sfraysse/moodle-assessmentpath-report/archive/v3.6.0.zip)
+- Bloc Assessment Path pour [Moodle 3.6](https://github.com/sfraysse/moodle-assessmentpath-block/archive/v3.6.0.zip)
+- Rapport Assessment Path pour [Moodle 3.6](https://github.com/sfraysse/moodle-assessmentpath-report/archive/v3.6.0.zip)
 
 
 
