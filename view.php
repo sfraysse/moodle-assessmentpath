@@ -39,6 +39,12 @@ $url = new moodle_url('/mod/assessmentpath/view.php', array('id'=>$id));
 $PAGE->set_url($url);
 
 //
+// Logs
+//
+
+assessmentpath_trigger_path_event('course_module_viewed', $course, $cm, $activity);
+
+//
 // Print the play page
 //
 
