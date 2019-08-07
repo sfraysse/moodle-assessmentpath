@@ -42,9 +42,6 @@ $courseid = $course->id;
 $activityid = $activity->id;
 $stepid = $step->id;
 
-// KD2015-31 - End of "group members only" option
-// $grouping = $DB->get_record('groupings', array('id'=>$cm->groupingid), 'id,name', MUST_EXIST);
-// $groupingid = $cm->groupingid;
 $grouping = scormlite_report_get_activity_group($cm->id);
 $groupingid = null;
 if (!is_null($grouping)) {
@@ -76,11 +73,7 @@ else if ($format == 'html') $title = assessmentpath_report_print_activity_header
 
 // Prepare Excel title
 $titles = array();
-
-// KD2015-31 - End of "group members only" option
-// $titles[] = get_string('groupresults_nostyle', 'scormlite', $grouping->name);
 if (!is_null($grouping)) $titles[] = get_string('groupresults_nostyle', 'scormlite', $grouping->name);
-
 $titles[] = $course->fullname;
 $titles[] = format_string($activity->name);
 
@@ -104,8 +97,8 @@ if ($action == 'save') {
 			}				
 		}			
 	}
-	if (!empty($initial)) assessmentpath_set_step_users_scores($initial, $stepid, 0);
-	if (!empty($remediation)) assessmentpath_set_step_users_scores($remediation, $stepid, 1);
+	if (!empty($initial)) assessmentpath_set_step_users_scores($course, $cm, $activity, $initial, $stepid, 0);
+	if (!empty($remediation)) assessmentpath_set_step_users_scores($course, $cm, $activity, $remediation, $stepid, 1);
 }
 
 //

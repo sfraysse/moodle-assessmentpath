@@ -31,34 +31,49 @@ define('COMMENT_CONTEXT_GROUP_COURSE', 5);	// Report P2
 
 // Modify scores
 
-function assessmentpath_set_step_users_scores($usersscores, $stepid, $remediation = 0) {
-	// Get scoes
+function assessmentpath_set_step_users_scores($course, $cm, $activity, $usersscores, $stepid, $remediation = 0) {
+	
+	// Get sco
 	global $DB;
 	$sql = "
-		SELECT T.sco AS scoid, SS.passingscore
+		SELECT T.sco AS scoid, SS.*
 		FROM {assessmentpath_steps} S
 		INNER JOIN {assessmentpath_tests} T ON T.step=S.id AND T.remediation=$remediation
 		INNER JOIN {scormlite_scoes} SS ON SS.id=T.sco
 		WHERE S.id=$stepid";
 	$records = $DB->get_recordset_sql($sql);
-	$scoid = 0;
-	$passingscore = 0;
+	$sco = null;
 	foreach ($records as $record) {
-		$scoid = $record->scoid;
-		$passingscore = $record->passingscore;
+		$sco = $record;
 		break;
 	}
-	if (empty($scoid) || empty($passingscore)) return;
+	if (is_null($sco)) return;
+
+	// SCORM Lite lib
+	global $CFG;
+	require_once($CFG->dirroot.'/mod/scormlite/locallib.php');
+
 	// Change score
 	foreach ($usersscores as $userid => $newscore) {
 		$scaled = $newscore/100;
-		$DB->set_field('scormlite_scoes_track', 'value', $scaled, array('element'=>'cmi.score.scaled', 'scoid'=>$scoid, 'userid'=>$userid));
-		$DB->set_field('scormlite_scoes_track', 'value', $newscore, array('element'=>'cmi.score.raw', 'scoid'=>$scoid, 'userid'=>$userid));
-		if ($newscore >= $passingscore) {
-			$DB->set_field('scormlite_scoes_track', 'value', 'passed', array('element'=>'cmi.success_status', 'scoid'=>$scoid, 'userid'=>$userid));			
+		$DB->set_field('scormlite_scoes_track', 'value', $scaled, array('element'=>'cmi.score.scaled', 'scoid'=>$sco->id, 'userid'=>$userid));
+		$DB->set_field('scormlite_scoes_track', 'value', $newscore, array('element'=>'cmi.score.raw', 'scoid'=>$sco->id, 'userid'=>$userid));
+		if ($newscore >= $sco->passingscore) {
+			$success = true;
+			$DB->set_field('scormlite_scoes_track', 'value', 'passed', array('element'=>'cmi.success_status', 'scoid'=>$sco->id, 'userid'=>$userid));			
 		} else {
-			$DB->set_field('scormlite_scoes_track', 'value', 'failed', array('element'=>'cmi.success_status', 'scoid'=>$scoid, 'userid'=>$userid));			
+			$success = false;
+			$DB->set_field('scormlite_scoes_track', 'value', 'failed', array('element'=>'cmi.success_status', 'scoid'=>$sco->id, 'userid'=>$userid));			
 		}
+
+		// Event.
+		scormlite_trigger_sco_event('sco_result_changed', $course, $cm, $activity, $sco, $userid, [
+			'success' => $success,
+			'score_raw' => $newscore,
+			'score_scaled' => $scaled,
+			'score_min' => 0,
+			'score_max' => 100,
+		]);
 	}	
 }
 
