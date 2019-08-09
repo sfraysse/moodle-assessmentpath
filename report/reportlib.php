@@ -67,7 +67,7 @@ function assessmentpath_set_step_users_scores($course, $cm, $activity, $userssco
 		}
 
 		// Event.
-		scormlite_trigger_sco_event('sco_result_changed', $course, $cm, $activity, $sco, $userid, [
+		scormlite_trigger_sco_event('sco_result_forced', $course, $cm, $activity, $sco, $userid, [
 			'success' => $success,
 			'score_raw' => $newscore,
 			'score_scaled' => $scaled,

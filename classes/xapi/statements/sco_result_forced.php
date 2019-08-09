@@ -26,7 +26,7 @@ namespace mod_assessmentpath\xapi\statements;
 
 defined('MOODLE_INTERNAL') || die();
 
-use mod_scormlite\xapi\statements\sco_result_changed as native_sco_result_changed;
+use mod_scormlite\xapi\statements\sco_result_forced as native_sco_result_forced;
 
 /**
  * xAPI transformation of an AssessmentPath event.
@@ -35,7 +35,7 @@ use mod_scormlite\xapi\statements\sco_result_changed as native_sco_result_change
  * @copyright  2019 Sébastien Fraysse {@link http://fraysse.eu}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class sco_result_changed extends native_sco_result_changed {
+class sco_result_forced extends native_sco_result_forced {
 
     use sco_statement;
 

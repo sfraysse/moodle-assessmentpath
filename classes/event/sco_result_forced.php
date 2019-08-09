@@ -18,9 +18,9 @@ namespace mod_assessmentpath\event;
 
 defined('MOODLE_INTERNAL') || die();
 
-use mod_scormlite\event\sco_result_changed as native_sco_result_changed;
+use mod_scormlite\event\sco_result_forced as native_sco_result_forced;
 
-class sco_result_changed extends native_sco_result_changed {
+class sco_result_forced extends native_sco_result_forced {
 
 }
 
