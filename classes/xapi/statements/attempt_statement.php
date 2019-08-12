@@ -35,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 trait attempt_statement {
 
-    use utils;
+    use statement_utils;
 
 
     /**
