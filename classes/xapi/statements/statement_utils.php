@@ -89,10 +89,10 @@ trait statement_utils {
      */
     protected function init_data() {
         global $DB;
-        $this->cm = $DB->get_record('course_modules', ['id' => $this->event->contextinstanceid]);
-        $this->sco = $DB->get_record('scormlite_scoes', ['id' => $this->event->objectid]);
-        $this->test = $DB->get_record('assessmentpath_tests', ['sco' => $this->sco->id]);
-        $this->step = $DB->get_record('assessmentpath_steps', ['id' => $this->test->step]);
+        $this->cm = $DB->get_record('course_modules', ['id' => $this->event->contextinstanceid], '*', MUST_EXIST);
+        $this->sco = $DB->get_record('scormlite_scoes', ['id' => $this->event->objectid], '*', MUST_EXIST);
+        $this->test = $DB->get_record('assessmentpath_tests', ['sco' => $this->sco->id], '*', MUST_EXIST);
+        $this->step = $DB->get_record('assessmentpath_steps', ['id' => $this->test->step], '*', MUST_EXIST);
         $this->xapimodule = $this->activities->get('assessmentpath', $this->cm->instance, false, 'module', 'assessmentpath', 'mod_assessmentpath');
     }
 
