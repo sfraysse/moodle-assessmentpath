@@ -392,6 +392,9 @@ function assessmentpath_report_populate_step_results($step, $users, $scoids, $us
 
 function assessmentpath_report_get_attempts($scoids, $userids, $closedonly = true)
 {
+	global $CFG;
+	require_once($CFG->dirroot.'/mod/scormlite/report/reportlib.php');
+
 	if (empty($userids) || empty($scoids)) return array();
 	$res = [];
 	foreach($scoids as $scoid) {
