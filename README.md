@@ -3,7 +3,7 @@
 
 # Versions
 
-Vous êtes sur la page de la **version 3.5.1** du plugin Assessment Path, dernière version compatible avec **Moodle 3.5**.
+Vous êtes sur la page de la **version 3.5.2** du plugin Assessment Path, dernière version compatible avec **Moodle 3.5**.
 
 Ce plugin existe aussi pour les versions suivantes de Moodle :
 - **Moodle 3.4** : [AssessmentPath 3.4](https://github.com/sfraysse/moodle-assessmentpath/tree/3.4)
@@ -23,7 +23,7 @@ Ce plugin existe aussi pour les versions suivantes de Moodle :
 
 ### Plugin principal
 
-- Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v3.5.1.zip.
+- Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v3.5.2.zip.
 - Dans `Moodle > Administration > Plugins > Install plugins`, importer le fichier ZIP du plugin.
 - Suivre la procédure d'installation.
 
