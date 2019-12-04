@@ -109,7 +109,6 @@ trait statement_utils {
 
         // Result.
         return [
-            'objectType' => 'Activity',
             'id' => $id,
             'definition' => [
                 'type' => 'http://vocab.xapi.fr/activities/training-sequence'
@@ -131,7 +130,6 @@ trait statement_utils {
 
         // Base.
         $test = [
-            'objectType' => 'Activity',
             'id' => $id,
             'definition' => [
                 'type' => 'http://vocab.xapi.fr/activities/quiz'
@@ -140,6 +138,7 @@ trait statement_utils {
 
         // Full definition.
         if ($fulldef) {
+            $test['objectType'] = 'Activity';
             $test['definition']['extensions'] = [
                 'http://vocab.xapi.fr/extensions/remedial' => $this->test->remediation ? true : false
             ];

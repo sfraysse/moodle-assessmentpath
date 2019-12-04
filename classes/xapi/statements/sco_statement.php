@@ -68,11 +68,17 @@ trait sco_statement {
         // Add step to grouping.
         $context['contextActivities']['grouping'][] = $this->xapimodule;
 
-        // Granularity level.
+        // Granularity level / Moodle module profile.
         foreach ($context['contextActivities']['category'] as &$category) {
+
+            // Granularity level.
             if ($category['definition']['type'] == 'http://vocab.xapi.fr/activities/granularity-level') {
                 $category['id'] = 'http://vocab.xapi.fr/categories/inside-learning-unit';
-                break;
+            }
+
+            // Moodle module profile.
+            if ($category['id'] == 'http://vocab.xapi.fr/categories/moodle/scormlite') {
+                $category['id'] = 'http://vocab.xapi.fr/categories/moodle/assessmentpath';
             }
         }
 
