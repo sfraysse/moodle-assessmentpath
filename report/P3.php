@@ -26,6 +26,7 @@ require_once($CFG->dirroot.'/mod/assessmentpath/report/reportlib.php');
 // Params
 $ids = required_param('id', PARAM_TEXT); 
 $format  = optional_param('format', 'lms', PARAM_ALPHA);  // 'lms', 'csv', 'html', 'xls'
+$groupingid = optional_param('groupingid', null, PARAM_INT);
 
 // Activity List
 $ids = explode(',', $ids);
@@ -39,24 +40,17 @@ $activity = $DB->get_record('assessmentpath', array('id'=>$cm->instance), '*', M
 $courseid = $course->id;
 $activityid = $activity->id;
 
-// KD2015-31 - End of "group members only" option
-// $grouping = $DB->get_record('groupings', array('id'=>$cm->groupingid), 'id,name', MUST_EXIST);
-// $groupingid = $cm->groupingid;
-$grouping = scormlite_report_get_activity_group($cm->id);
-$groupingid = null;
-if (!is_null($grouping)) {
-    $groupingid = $grouping->id;
-    $cm->groupingid = $groupingid;
-}
-
 //
 // Page setup 
 //
 
+// Permissions
 $context = context_course::instance($course->id);
 require_login($course->id, false, $cm);
 require_capability('mod/scormlite:viewotherreport', $context);
-$url = new moodle_url('/mod/assessmentpath/report/P3.php', array('id'=>$cm->id));
+
+// Page URL
+$url = new moodle_url('/mod/assessmentpath/report/P3.php', array('id'=>$cm->id, 'groupingid'=>$groupingid));
 if ($format == 'lms') $PAGE->set_url($url);
 
 //
@@ -64,16 +58,19 @@ if ($format == 'lms') $PAGE->set_url($url);
 //
 
 // Print HTML title
-if ($format == 'lms') $title = assessmentpath_report_print_activity_header($cm, $activity, $course);
-else if ($format == 'html') $title = assessmentpath_report_print_activity_header_html($cm, $activity, $course, null, null, null, 'path-mod-assessmentpath-report');
+if ($format == 'lms') $groupingid = assessmentpath_report_print_activity_header($cm, $activity, $course, $groupingid);
+else if ($format == 'html') $groupingid = assessmentpath_report_print_activity_header_html($cm, $activity, $course, $groupingid, null, null, null, null, 'path-mod-assessmentpath-report');
 
-// Prepare Excel title
+// Update URL
+$url = new moodle_url('/mod/assessmentpath/report/P3.php', array('id'=>$cm->id, 'groupingid'=>$groupingid)); 
+
+//
+// Prepare Excel 
+//
+
+$grouping = $DB->get_record('groups', array('id'=>$groupingid), 'id,name', MUST_EXIST);
 $titles = array();
-
-// KD2015-31 - End of "group members only" option
-//$titles[] = get_string('groupresults_nostyle', 'scormlite', $grouping->name);
-if (!is_null($grouping)) $titles[] = get_string('groupresults_nostyle', 'scormlite', $grouping->name);
-
+$titles[] = get_string('groupresults_nostyle', 'scormlite', $grouping->name);
 $titles[] = $course->fullname;
 
 //
@@ -118,7 +115,7 @@ foreach ($ids as $id) {
 		if ($displayrank) $cols[] = 'rank';
 	
 		// Table
-		$table = new assessmentpath_report_table($courseid, $cols, $url);
+		$table = new assessmentpath_report_table($courseid, $groupingid, $cols, $url);
 		$table->define_presentation($activity->colors);
 		$table->add_users($users, ($format == 'lms'));
 		$table->add_average($steps, $global_avg);
@@ -127,7 +124,7 @@ foreach ($ids as $id) {
 		// Comments
 		$commentform = new assessmentpath_comment_form();
 		$content = $commentform->start($url, ($format == 'lms'));
-		$content .= $commentform->addcomment($format, get_string("comments", "assessmentpath"), COMMENT_CONTEXT_GROUP_PATH, $activity->id);
+		$content .= $commentform->addcomment($format, get_string("comments", "assessmentpath"), COMMENT_CONTEXT_GROUP_PATH, $activity->id, $groupingid);
 		$content .= $commentform->finish();
 		$worksheet->add_post_worksheet($content);
 				
@@ -138,7 +135,7 @@ foreach ($ids as $id) {
 		if ($format == 'lms') {
 			$stepids = array_keys($steps);
 			$stepids = implode(',', $stepids);
-			$P4url = new moodle_url($CFG->wwwroot.'/mod/assessmentpath/report/P4.php', array('stepid'=>$stepids));
+			$P4url = new moodle_url($CFG->wwwroot.'/mod/assessmentpath/report/P4.php', array('stepid'=>$stepids, 'groupingid'=>$groupingid));
 			scormlite_print_exportbuttons(array('html'=>$url, 'csv'=>$url, 'xls'=>$url, 'P4'=>$P4url));
 		}
 	}
