@@ -311,4 +311,24 @@ class assessmentpath_test_content_file_info extends assessmentpath_test_basecont
 	}
 }
 
-?>
+
+//
+// Events
+//
+
+function assessmentpath_trigger_path_event($eventname, $course, $cm, $activity, $other = []) {
+	$data = [
+		'objectid' => $activity->id,
+		'context' => context_module::instance($cm->id),
+	];
+	if (!empty($other)) {
+		$data['other'] = $other;
+	}
+	$eventclass = '\mod_assessmentpath\event\\' . $eventname;
+	$event = $eventclass::create($data);
+	$event->add_record_snapshot('course', $course);
+	$event->add_record_snapshot('assessmentpath', $activity);
+	$event->add_record_snapshot('course_modules', $cm);
+	$event->trigger();
+}
+

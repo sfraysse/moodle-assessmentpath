@@ -31,34 +31,49 @@ define('COMMENT_CONTEXT_GROUP_COURSE', 5);	// Report P2
 
 // Modify scores
 
-function assessmentpath_set_step_users_scores($usersscores, $stepid, $remediation = 0) {
-	// Get scoes
+function assessmentpath_set_step_users_scores($course, $cm, $activity, $usersscores, $stepid, $remediation = 0) {
+	
+	// Get sco
 	global $DB;
 	$sql = "
-		SELECT T.sco AS scoid, SS.passingscore
+		SELECT T.sco AS scoid, SS.*
 		FROM {assessmentpath_steps} S
 		INNER JOIN {assessmentpath_tests} T ON T.step=S.id AND T.remediation=$remediation
 		INNER JOIN {scormlite_scoes} SS ON SS.id=T.sco
 		WHERE S.id=$stepid";
 	$records = $DB->get_recordset_sql($sql);
-	$scoid = 0;
-	$passingscore = 0;
+	$sco = null;
 	foreach ($records as $record) {
-		$scoid = $record->scoid;
-		$passingscore = $record->passingscore;
+		$sco = $record;
 		break;
 	}
-	if (empty($scoid) || empty($passingscore)) return;
+	if (is_null($sco)) return;
+
+	// SCORM Lite lib
+	global $CFG;
+	require_once($CFG->dirroot.'/mod/scormlite/locallib.php');
+
 	// Change score
 	foreach ($usersscores as $userid => $newscore) {
 		$scaled = $newscore/100;
-		$DB->set_field('scormlite_scoes_track', 'value', $scaled, array('element'=>'cmi.score.scaled', 'scoid'=>$scoid, 'userid'=>$userid));
-		$DB->set_field('scormlite_scoes_track', 'value', $newscore, array('element'=>'cmi.score.raw', 'scoid'=>$scoid, 'userid'=>$userid));
-		if ($newscore >= $passingscore) {
-			$DB->set_field('scormlite_scoes_track', 'value', 'passed', array('element'=>'cmi.success_status', 'scoid'=>$scoid, 'userid'=>$userid));			
+		$DB->set_field('scormlite_scoes_track', 'value', $scaled, array('element'=>'cmi.score.scaled', 'scoid'=>$sco->id, 'userid'=>$userid));
+		$DB->set_field('scormlite_scoes_track', 'value', $newscore, array('element'=>'cmi.score.raw', 'scoid'=>$sco->id, 'userid'=>$userid));
+		if ($newscore >= $sco->passingscore) {
+			$success = true;
+			$DB->set_field('scormlite_scoes_track', 'value', 'passed', array('element'=>'cmi.success_status', 'scoid'=>$sco->id, 'userid'=>$userid));			
 		} else {
-			$DB->set_field('scormlite_scoes_track', 'value', 'failed', array('element'=>'cmi.success_status', 'scoid'=>$scoid, 'userid'=>$userid));			
+			$success = false;
+			$DB->set_field('scormlite_scoes_track', 'value', 'failed', array('element'=>'cmi.success_status', 'scoid'=>$sco->id, 'userid'=>$userid));			
 		}
+
+		// Event.
+		scormlite_trigger_sco_event('sco_result_forced', $course, $cm, $activity, $sco, $userid, [
+			'success' => $success,
+			'score_raw' => $newscore,
+			'score_scaled' => $scaled,
+			'score_min' => 0,
+			'score_max' => 100,
+		]);
 	}	
 }
 
@@ -392,6 +407,9 @@ function assessmentpath_report_populate_step_results($step, $users, $scoids, $us
 
 function assessmentpath_report_get_attempts($scoids, $userids, $closedonly = true)
 {
+	global $CFG;
+	require_once($CFG->dirroot.'/mod/scormlite/report/reportlib.php');
+
 	if (empty($userids) || empty($scoids)) return array();
 	$res = [];
 	foreach($scoids as $scoid) {
@@ -567,6 +585,7 @@ class assessmentpath_worksheet {
 class assessmentpath_report_table {
 	// Definition
 	protected $courseid = null;
+	protected $groupingid = null;
 	protected $elements = null;
 	protected $url = null;
 	protected $content = null;
@@ -578,8 +597,9 @@ class assessmentpath_report_table {
 	protected $colors = null;
 	protected $fullmode = null;
 	
-	function __construct($courseid, $elements, $url, $content = null) {
+	function __construct($courseid, $groupingid, $elements, $url, $content = null) {
 		$this->courseid = $courseid;
+		$this->groupingid = $groupingid;
 		$this->elements = $elements;
 		$this->url = $url;
 		$this->content = $content;
@@ -769,12 +789,12 @@ class assessmentpath_report_table {
 				foreach ($element as $columnid => $column) {
 					$columns[] = $columnid;
 					if ($export == "lms_P1") {
-						if ($this->fullmode) $headers[] = $column->code.'<br/>'.assessmentpath_report_get_link_P4($column->id);
+						if ($this->fullmode) $headers[] = $column->code.'<br/>'.assessmentpath_report_get_link_P4($column->id, $this->groupingid);
 						else $headers[] = $column->code;
 					} else if ($export == "lms_P2") {
-						$headers[] = $column->code.'<br/>'.assessmentpath_report_get_link_P3($column->cmid);
+						$headers[] = $column->code.'<br/>'.assessmentpath_report_get_link_P3($column->cmid, $this->groupingid);
 					} else if ($export == "lms_P3") {
-						$headers[] = $column->code.'<br/>'.assessmentpath_report_get_link_P4($column->id);
+						$headers[] = $column->code.'<br/>'.assessmentpath_report_get_link_P4($column->id, $this->groupingid);
 					} else {
 						$headers[] = $column->code;
 					}
@@ -789,13 +809,13 @@ class assessmentpath_report_table {
 				else if ($element == 'rank') $headers[] = get_string('rank', 'scormlite');
 				else if ($element == 'testcaption') $headers[] = get_string('test', 'assessmentpath');
 				else if ($element == 'initialscore') {
-					if ($format == 'lms') $headers[] = $this->content->code.'<br/>'.assessmentpath_report_get_link_statistics($this->content->initial_scoid, $this->content->id);
+					if ($format == 'lms') $headers[] = $this->content->code.'<br/>'.assessmentpath_report_get_link_statistics($this->content->initial_scoid, $this->content->id, $this->groupingid);
 					else $headers[] = $this->content->code;
 				} else if ($element == 'remediationscore') {
 
 					// SF2018 - Check remledial test existence
 					if (isset($this->content->remediation_scoid)) {
-						if ($format == 'lms') $headers[] = $this->content->code.'_R'.'<br/>'.assessmentpath_report_get_link_statistics($this->content->remediation_scoid, $this->content->id);
+						if ($format == 'lms') $headers[] = $this->content->code.'_R'.'<br/>'.assessmentpath_report_get_link_statistics($this->content->remediation_scoid, $this->content->id, $this->groupingid);
 						else $headers[] = $this->content->code.'_R';
 					} else {
 						$headers[] = '';
@@ -955,46 +975,57 @@ class assessmentpath_table_progress_export_format extends table_default_export_f
 // Print functions
 //
 
-function assessmentpath_report_print_activity_header_html($cm, $activity, $course, $titlelink = '', $subtitle = '', $bodyid = null, $bodyclass = null) {
-	$pagetitle = scormlite_print_header_html($activity, $bodyid, $bodyclass);
-	echo '<div class="generalbox mdl-align">';
-	if (empty($cm->groupingid)) {
-		echo '<p>'.get_string('noactivitygrouping', 'scormlite').'</p>';
-		echo '</div>';
-		scormlite_print_footer_html();
-		exit;
-	} else {
-		scormlite_print_activity_grouping($cm, $activity);
-        scormlite_print_title($cm, $activity, $titlelink);
-        if (!empty($subtitle)) echo '<h3 class="mdl-align step">'.$subtitle.'</h3>';
-        echo '</div>';
-        return $pagetitle;
-	}
-}
-
-function assessmentpath_report_print_activity_header($cm, $activity, $course, $titlelink = '', $subtitle = '') {
+function assessmentpath_report_print_activity_header($cm, $activity, $course, $groupingid, $stepid = null, $titlelink = '', $subtitle = '') {
 	global $OUTPUT, $CFG;
 	// Start
-	$pagetitle = scormlite_print_header($cm, $activity, $course);
+	$title = scormlite_print_header($cm, $activity, $course);
 	// Tabs
 	$playurl = "$CFG->wwwroot/mod/assessmentpath/view.php?id=$cm->id";
 	$reporturl = "$CFG->wwwroot/mod/assessmentpath/report/P3.php?id=$cm->id";
 	scormlite_print_tabs($cm, $activity, $playurl, $reporturl, 'report');
-	// Title box
-	echo $OUTPUT->box_start('generalbox mdl-align');
-	if (empty($cm->groupingid)) {
-		echo '<p>'.get_string('noactivitygrouping', 'scormlite').'</p>';
-		echo $OUTPUT->box_end();
-		echo $OUTPUT->footer();
-		exit;
-	} else {
-		$groupinglink = assessmentpath_report_get_link_P2($course->id, $cm->groupingid);
-		scormlite_print_activity_grouping($cm, $activity, $groupinglink);
-		scormlite_print_title($cm, $activity, $titlelink);
-		if (!empty($subtitle)) echo '<h3 class="mdl-align step">'.$subtitle.'</h3>';
-		echo $OUTPUT->box_end();
-		return $pagetitle;
+	// Groupings
+	$groupings = scormlite_report_get_activity_groups($cm->id);
+	$strtitle = '';
+	$prestr1 = '<h3 class="mdl-align group">';
+	$prestr2 = $prestr1.get_string('groupresults', 'scormlite', '');
+	$poststr = '</h3>';
+	$poststr .= '<h2 class="main">'.$title.' '.$titlelink.'</h2>';
+	if (!empty($subtitle)) {
+		$poststr .= '<h3 class="mdl-align step">'.$subtitle.'</h3>';
 	}
+	if (count($groupings) == 1) {
+		$groupingid = array_keys($groupings)[0];
+	}
+	if ($groupingid) {
+		$link = assessmentpath_report_get_link_P2($course->id, $groupingid);
+		$poststr = ' ' . $link . $poststr;
+	}
+	$groupingid = scormlite_print_usergroup_box($course->id, $groupings, $groupingid, $cm->id, $stepid, null, $strtitle, $prestr1, $prestr2, $poststr, true, true);
+	return $groupingid;
+}
+
+function assessmentpath_report_print_activity_header_html($cm, $activity, $course, $groupingid, $stepid = null, $titlelink = '', $subtitle = '', $bodyid = null, $bodyclass = null) {
+	// Start
+	$title = scormlite_print_header_html($activity, $bodyid, $bodyclass);
+	// Groupings
+	$groupings = scormlite_report_get_activity_groups($cm->id);
+	$strtitle = '';
+	$prestr1 = '<h3 class="mdl-align group">';
+	$prestr2 = $prestr1.get_string('groupresults', 'scormlite', '');
+	$poststr = '</h3>';
+	$poststr .= '<h2 class="main">'.$title.' '.$titlelink.'</h2>';
+	if (!empty($subtitle)) {
+		$poststr .= '<h3 class="mdl-align step">'.$subtitle.'</h3>';
+	}
+	if (count($groupings) == 1) {
+		$groupingid = array_keys($groupings)[0];
+	}
+	if ($groupingid) {
+		$link = assessmentpath_report_get_link_P2($course->id, $groupingid);
+		$poststr = ' ' . $link . $poststr;
+	}
+	$groupingid = scormlite_print_usergroup_box($course->id, $groupings, $groupingid, $cm->id, $stepid, null, $strtitle, $prestr1, $prestr2, $poststr, false, true);
+	return $groupingid;
 }
 
 function assessmentpath_report_get_url_P1($courseid, $userid = null, $groupingid = null) {
@@ -1032,9 +1063,9 @@ function assessmentpath_report_get_link_P2($courseid, $groupingid = null) {
 
 	return $reportlink;
 }
-function assessmentpath_report_get_link_P3($activityid) {
+function assessmentpath_report_get_link_P3($activityid, $groupingid = null) {
 	global $CFG, $OUTPUT;
-	$reporturl = $CFG->wwwroot.'/mod/assessmentpath/report/P3.php?id='.$activityid;
+	$reporturl = $CFG->wwwroot.'/mod/assessmentpath/report/P3.php?id='.$activityid.'&groupingid='.$groupingid;
 	$strreport = get_string('P3', 'assessmentpath');
 
 	// SF2017 - Icons
@@ -1043,9 +1074,9 @@ function assessmentpath_report_get_link_P3($activityid) {
 
 	return $reportlink;
 }
-function assessmentpath_report_get_link_P4($stepid) {
+function assessmentpath_report_get_link_P4($stepid, $groupingid = null) {
 	global $CFG, $OUTPUT;
-	$reporturl = $CFG->wwwroot.'/mod/assessmentpath/report/P4.php?stepid='.$stepid;
+	$reporturl = $CFG->wwwroot.'/mod/assessmentpath/report/P4.php?stepid='.$stepid.'&groupingid='.$groupingid;
 	$strreport = get_string('P4', 'assessmentpath');
 
 	// SF2017 - Icons
@@ -1054,9 +1085,9 @@ function assessmentpath_report_get_link_P4($stepid) {
 
 	return $reportlink;
 }
-function assessmentpath_report_get_link_statistics($scoid, $stepid) {
+function assessmentpath_report_get_link_statistics($scoid, $stepid, $groupingid = null) {
 	global $CFG, $OUTPUT;
-	$reporturl = $CFG->wwwroot.'/mod/assessmentpath/report/statistics.php?scoid='.$scoid.'&stepid='.$stepid;
+	$reporturl = $CFG->wwwroot.'/mod/assessmentpath/report/statistics.php?scoid='.$scoid.'&stepid='.$stepid.'&groupingid='.$groupingid;
 	$strreport = get_string('statistics', 'assessmentpath');
 	$reportlink = '<a title="'.$strreport.'" href="'.$reporturl.'">'.$OUTPUT->pix_icon('grades', $strreport, 'mod_assessmentpath').'</a>';
 	return $reportlink;
@@ -1095,6 +1126,10 @@ class assessmentpath_comment_form {
 			if (isset($userorgroupid)) $content .= '<input type="hidden" name="userid'.$index.'" value="'.$userorgroupid.'" /> ';
 		}
 		$comment = $this->getcomment($contexttype, $contextid, $userorgroupid);
+		if (empty($comment) && isset($userorgroupid)) {
+			// P3 & P4 comments were not associated with a $userorgroupid until now.
+			$comment = $this->getcomment($contexttype, $contextid);
+		}
 		if ($this->edit || !empty($comment)) {  // Do not display empty comment if not in editing mode
 			if ($format == 'lms' || $format == 'html') {
 				$content .= '<div class="'.$css.'">';
@@ -1126,7 +1161,8 @@ class assessmentpath_comment_form {
 	private function getcomment($contexttype, $contextid, $userorgroupid = null) {
 		global $DB;
 		$cond = array('contexttype'=>$contexttype, 'contextid'=>$contextid);
-		if (isset($userorgroupid)) $cond['userid'] = $userorgroupid;
+		//if (isset($userorgroupid)) 
+		$cond['userid'] = $userorgroupid;
 		if ($record = $DB->get_record('assessmentpath_comments', $cond)) {
 			return $record->comment;
 		} else {

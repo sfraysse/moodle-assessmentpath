@@ -26,6 +26,7 @@ require_once($CFG->dirroot.'/mod/assessmentpath/report/reportlib.php');
 // Params
 $scoid = required_param('scoid', PARAM_INT); 
 $stepid = required_param('stepid', PARAM_INT); 
+$groupingid = optional_param('groupingid', null, PARAM_INT);
 
 // Useful objects and vars
 $step = $DB->get_record('assessmentpath_steps', array('id' => $stepid), '*', MUST_EXIST);
@@ -35,7 +36,7 @@ $course = $DB->get_record('course', array('id' => $cm->course), '*', MUST_EXIST)
 $sco = $DB->get_record("scormlite_scoes", array("id"=>$scoid), '*', MUST_EXIST);
 
 // Page URL
-$url = new moodle_url('/mod/assessmentpath/report/statistics.php', array('scoid'=>$scoid, 'stepid'=>$stepid));
+$url = new moodle_url('/mod/assessmentpath/report/statistics.php', array('scoid'=>$scoid, 'stepid'=>$stepid, 'groupingid'=>$groupingid));
 $PAGE->set_url($url);
 
 // Check permissions
@@ -67,7 +68,7 @@ scormlite_report_print_quetzal_statistics($scoid);
 
 // ----------- Commands ---------
 
-$backUrl = "$CFG->wwwroot/mod/assessmentpath/report/P4.php?stepid=$stepid";
+$backUrl = "$CFG->wwwroot/mod/assessmentpath/report/P4.php?stepid=$stepid&groupingid=$groupingid";
 echo '<a href="'.$backUrl.'" class="btn btn-default">'.get_string('back', 'assessmentpath').'</a>';
 
 // End

@@ -27,6 +27,7 @@ require_once($CFG->dirroot.'/mod/assessmentpath/report/reportlib.php');
 $stepids = required_param('stepid', PARAM_TEXT);
 $format  = optional_param('format', 'lms', PARAM_ALPHA);  // 'lms', 'csv', 'html', 'xls'
 $action  = optional_param('action', '', PARAM_ALPHA);  // 'save', 'edit'
+$groupingid = optional_param('groupingid', null, PARAM_INT);
 
 // Step List
 $stepids = explode(',', $stepids);
@@ -42,45 +43,45 @@ $courseid = $course->id;
 $activityid = $activity->id;
 $stepid = $step->id;
 
-// KD2015-31 - End of "group members only" option
-// $grouping = $DB->get_record('groupings', array('id'=>$cm->groupingid), 'id,name', MUST_EXIST);
-// $groupingid = $cm->groupingid;
-$grouping = scormlite_report_get_activity_group($cm->id);
-$groupingid = null;
-if (!is_null($grouping)) {
-    $groupingid = $grouping->id;
-    $cm->groupingid = $groupingid;
-}
-
 //
 // Page setup 
 //
 
+// Permissions
 $context = context_course::instance($course->id);
 require_login($course->id, false, $cm);
 require_capability('mod/scormlite:viewotherreport', $context);
 if ($action == 'edit' && !has_capability('mod/scormlite:modifyscores', $context)) $action = '';
-$url = new moodle_url('/mod/assessmentpath/report/P4.php', array('stepid'=>$stepid));
+
+// Page URL
+$url = new moodle_url('/mod/assessmentpath/report/P4.php', array('stepid'=>$stepid, 'groupingid'=>$groupingid));
 if ($format == 'lms') $PAGE->set_url($url);
 
 //
-// Print the play page
+// Print the page
 //
 
-// Print HTML title
-if ($format == 'lms') $titlelink = assessmentpath_report_get_link_P3($cm->id);
+// Title link.
+if ($format == 'lms') $titlelink = assessmentpath_report_get_link_P3($cm->id, $groupingid);
 else $titlelink = null;
+
+// Subtitle.
 $subtitle = '['.$step->code.'] '.$step->title;
-if ($format == 'lms') $title = assessmentpath_report_print_activity_header($cm, $activity, $course, $titlelink, $subtitle);
-else if ($format == 'html') $title = assessmentpath_report_print_activity_header_html($cm, $activity, $course, $titlelink, $subtitle, null, 'path-mod-assessmentpath-report');
 
-// Prepare Excel title
+// Print HTML title
+if ($format == 'lms') $groupingid = assessmentpath_report_print_activity_header($cm, $activity, $course, $groupingid, $stepid, $titlelink, $subtitle);
+else if ($format == 'html') $groupingid = assessmentpath_report_print_activity_header_html($cm, $activity, $course, $groupingid, $stepid, $titlelink, $subtitle, null, 'path-mod-assessmentpath-report');
+
+// Update URL
+$url = new moodle_url('/mod/assessmentpath/report/P4.php', array('stepid'=>$stepid, 'groupingid'=>$groupingid));
+
+//
+// Prepare Excel 
+//
+
+$grouping = $DB->get_record('groups', array('id'=>$groupingid), 'id,name', MUST_EXIST);
 $titles = array();
-
-// KD2015-31 - End of "group members only" option
-// $titles[] = get_string('groupresults_nostyle', 'scormlite', $grouping->name);
-if (!is_null($grouping)) $titles[] = get_string('groupresults_nostyle', 'scormlite', $grouping->name);
-
+$titles[] = get_string('groupresults_nostyle', 'scormlite', $grouping->name);
 $titles[] = $course->fullname;
 $titles[] = format_string($activity->name);
 
@@ -104,8 +105,8 @@ if ($action == 'save') {
 			}				
 		}			
 	}
-	if (!empty($initial)) assessmentpath_set_step_users_scores($initial, $stepid, 0);
-	if (!empty($remediation)) assessmentpath_set_step_users_scores($remediation, $stepid, 1);
+	if (!empty($initial)) assessmentpath_set_step_users_scores($course, $cm, $activity, $initial, $stepid, 0);
+	if (!empty($remediation)) assessmentpath_set_step_users_scores($course, $cm, $activity, $remediation, $stepid, 1);
 }
 
 //
@@ -161,7 +162,7 @@ foreach ($stepids as $stepid) {
 		$cols[] = 'remediationscore';
 		if ($format == 'lms' && $action == 'edit') $cols[] = 'scorefield_R';
 		// Table
-		$table = new assessmentpath_report_table($courseid, $cols, $url, $step);
+		$table = new assessmentpath_report_table($courseid, $groupingid, $cols, $url, $step);
 		$table->define_presentation($activity->colors);
 		$table->add_users($users, ($format == 'lms'));
 		$worksheet->add_table($table);
@@ -180,7 +181,7 @@ foreach ($stepids as $stepid) {
 		
 		// Statistics table
 		if ($format != 'csv') {
-			$table = new assessmentpath_report_table($courseid, array('title', 'beforeremediation', 'afterremediation'), $url);
+			$table = new assessmentpath_report_table($courseid, $groupingid, array('title', 'beforeremediation', 'afterremediation'), $url);
 			$table->define_presentation($activity->colors);
 			$table->add_scores(get_string('remediationaverage', 'assessmentpath'), array($statistics->avg_remediation_beforeremediation, $statistics->avg_remediation_afterremediation));
 			$table->add_scores(get_string('groupaverage', 'scormlite'), array($statistics->avg_group_beforeremediation, $statistics->avg_group_afterremediation));
@@ -190,7 +191,7 @@ foreach ($stepids as $stepid) {
 		// Comments
 		$commentform = new assessmentpath_comment_form();
 		$content = $commentform->start($url, ($format == 'lms'));
-		$content .= $commentform->addcomment($format, get_string("comments", "assessmentpath"), COMMENT_CONTEXT_GROUP_STEP, $stepid);
+		$content .= $commentform->addcomment($format, get_string("comments", "assessmentpath"), COMMENT_CONTEXT_GROUP_STEP, $stepid, $groupingid);
 		$content .= $commentform->finish();
 		$worksheet->add_post_worksheet($content);
 			
