@@ -572,21 +572,38 @@ function assessmentpath_reset_userdata($data) {
 		global $DB;
 		$DB->execute($sql, array($data->courseid));
 
-		// Activity comments
+		// Group step comments
+		$sql = '
+			DELETE COMMENT
+			FROM {assessmentpath_comments} COMMENT
+			INNER JOIN {assessmentpath_steps} S ON S.id=COMMENT.contextid
+			INNER JOIN {assessmentpath} A ON A.id=S.activity
+			INNER JOIN {course_modules} CM ON CM.instance=A.id
+			WHERE CM.course=? AND COMMENT.contexttype = ' . COMMENT_CONTEXT_GROUP_STEP;
+		global $DB;
+		$DB->execute($sql, array($data->courseid));
+
+		// User or group activity comments
 		$sql = '
 			DELETE COMMENT
 			FROM {assessmentpath_comments} COMMENT
 			INNER JOIN {assessmentpath} A ON A.id=COMMENT.contextid
 			INNER JOIN {course_modules} CM ON CM.instance=A.id
-			WHERE CM.course=? AND COMMENT.contexttype = ' . COMMENT_CONTEXT_USER_PATH;
+			WHERE CM.course=? AND (
+				COMMENT.contexttype = ' . COMMENT_CONTEXT_USER_PATH . '
+				OR COMMENT.contexttype = ' . COMMENT_CONTEXT_GROUP_PATH . '
+			)';
 		global $DB;
 		$DB->execute($sql, array($data->courseid));
 
-		// Course comments
+		// User or group course comments
 		$sql = '
 			DELETE COMMENT
 			FROM {assessmentpath_comments} COMMENT
-			WHERE COMMENT.contextid=? AND COMMENT.contexttype = ' . COMMENT_CONTEXT_USER_COURSE;
+			WHERE COMMENT.contextid=? AND (
+				COMMENT.contexttype = ' . COMMENT_CONTEXT_USER_COURSE . '
+				OR COMMENT.contexttype = ' . COMMENT_CONTEXT_GROUP_COURSE . '
+			)';
 		global $DB;
 		$DB->execute($sql, array($data->courseid));
 
