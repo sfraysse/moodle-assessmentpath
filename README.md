@@ -7,7 +7,8 @@ Vous êtes sur la page de la **version 3.5.4** du plugin Assessment Path, derni�
 
 Ce plugin existe aussi pour les versions suivantes de Moodle :
 - **Moodle 3.4** : [AssessmentPath 3.4](https://github.com/sfraysse/moodle-assessmentpath/tree/3.4)
-- **Moodle 3.6** : [AssessmentPath 3.6](https://github.com/sfraysse/moodle-assessmentpath/tree/3.6)
+- **Moodle 3.6 à 3.8** : [AssessmentPath 3.6](https://github.com/sfraysse/moodle-assessmentpath/tree/3.6)
+- **Moodle 3.9** : [AssessmentPath 3.9](https://github.com/sfraysse/moodle-assessmentpath)
 
 
 # Installation
