@@ -22,59 +22,92 @@ No impact
 # Tests
 
 ## Basic usage
-- 
+- 3 units: 1 open, 1 auto, 1 closed - OK
+- User 1 : failed > remedial - OK
+- User 2 : passed - OK
+- Admin : close step 1, open step 2, check progress block & P0 - OK
+- User 2 : review step 1, passed step 2 - OK
+- P3 - OK
+    - Comments - OK
+    - Export HTML - OK
+    - Export CSV - OK
+    - Export Excel - OK
+    - Export details (Excel) - OK
+- P4 - OK
+    - Comments - OK
+    - Modify scores - OK
+    - Export HTML - OK
+    - Export CSV - OK
+    - Export Excel - OK
+- P1 - OK - OK
+    - Path comments - OK
+    - Course comments - OK
+    - Export HTML - OK
+    - Export Excel - OK
+- P2 - OK
+    - Switch groups - OK
+    - Comments - OK
+    - Export HTML - OK
+    - Export CSV - OK
+    - Export Excel - OK
+    - Export paths (Excel) - OK
+    - Export users (Excel) - OK
+- Add group 2
+    - P3 switch comments & export - OK
+    - P4 switch comments & export & modify scores - OK
+    - P1 switch comments & export - OK
+    - P2 switch comments & export - OK
 
 ## Settings
-- Availability
-- Max time
-- Passing score
-- Display in
-- Display chronometer
-- Number of attempts
-- Scoring method
-- Prevent new attempts after success
-- Display rank
-- Review access
-- Display close button
+- Availability - OK
+- Max time - OK
+- Passing score - OK
+- Display in - OK
+- Display chronometer - OK
+- Number of attempts - OK
+- Scoring method - OK
+- Prevent new attempts after success - OK
+- Review access - OK
+- Display close button - OK
 
-## Operations
-- Delete attempts
-- Reset
-- Duplicate
-- Backup / Restore
+## Quetzal statistics
+OK
 
 ## Data privacy
-- Check Admin > Users > Privacy and policies > Plugin privacy registry
-- Run CRON
-- Download and explore data
+- Check Admin > Users > Privacy and policies > Plugin privacy registry - OK
+- Run CRON - OK
+- Download and explore data - OK
+
+## Operations
+- Duplicate - OK
+- Backup / Restore - OK
+- Reset - OK
 
 ## Events
 - Attempt completed
 - Attempt failed
-- Attempt initialized
-- Attempt launched
-- Attempt passed
-- Attempt terminated
+- Attempt initialized - OK
+- Attempt launched - OK
+- Attempt passed - OK
+- Attempt terminated - OK
 - Course module instance list viewed
-- Course module viewed
-- SCO result forced
-- SCO result updated
-- User graded
+- Course module viewed - OK
+- SCO result forced - OK
+- SCO result updated - OK
 
 ## xAPI
 
 ### Sync
 - Attempt completed
 - Attempt failed
-- Attempt initialized
-- Attempt launched
-- Attempt passed
-- Attempt terminated
+- Attempt initialized - OK
+- Attempt launched - OK
+- Attempt passed - OK
+- Attempt terminated - OK
 - Course module completion updated
-- Course module viewed
+- Course module viewed - OK
 - SCO result forced
 - SCO result updated
-- User graded
 
 ### Async
 Errors with Trax Logs which has not been upgraded yet !!!!!!!!!!!!!!!!!!!!!!
