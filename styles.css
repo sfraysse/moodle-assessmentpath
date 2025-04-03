@@ -8,6 +8,10 @@ h1, h2, h3, h4, h5, h6 {
 
 /* --------------- Steps layout --------------- */
 
+#page-mod-assessmentpath-mod .main-inner {
+    max-width: none !important;
+}
+
 .path-mod-assessmentpath #steps,
 .path-mod-assessmentpath #id_steps {
 	border: none;

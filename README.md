@@ -3,12 +3,10 @@
 
 # Versions
 
-Vous êtes sur la page de la **version 3.9.0** du plugin Assessment Path, dernière version compatible avec **Moodle 3.9**.
+Vous êtes sur la page de la **version 4.5.0** du plugin Assessment Path, dernière version compatible avec **Moodle 4.5**.
 
 Ce plugin existe aussi pour les versions suivantes de Moodle :
-- **Moodle 3.4** : [AssessmentPath 3.4](https://github.com/sfraysse/moodle-assessmentpath/tree/3.4)
-- **Moodle 3.5** : [AssessmentPath 3.5](https://github.com/sfraysse/moodle-assessmentpath/tree/3.5)
-- **Moodle 3.6 à 3.8** : [AssessmentPath 3.6](https://github.com/sfraysse/moodle-assessmentpath/tree/3.6)
+- **Moodle 4.3** : [AssessmentPath 4.3.*](https://github.com/sfraysse/moodle-assessmentpath/tree/4.3)
 
 
 # Installation
@@ -16,15 +14,15 @@ Ce plugin existe aussi pour les versions suivantes de Moodle :
 
 ## Pré-requis
 
-- Moodle version 3.9
-- [SCORM Lite 3.9.0+](https://github.com/sfraysse/moodle-scormlite/tree/3.9)
+- Moodle version 4.5
+- [SCORM Lite 4.5](https://github.com/sfraysse/moodle-scormlite/tree/4.5)
 
 
 ## Procédure d'installation
 
 ### Plugin principal
 
-- Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v3.9.0.zip.
+- Télécharger la dernière version du plugin : https://github.com/sfraysse/moodle-assessmentpath/archive/v4.5.0.zip.
 - Dans `Moodle > Administration > Plugins > Install plugins`, importer le fichier ZIP du plugin.
 - Suivre la procédure d'installation.
 
@@ -32,8 +30,7 @@ Ce plugin existe aussi pour les versions suivantes de Moodle :
 
 Bien que complémentaires, l'installation de ces plugins est **obligatoire** pour assurer le bon fonctionnement d'Assessment Path. Répéter la procédure d'installation pour les plugins :
 
-- [Bloc Assessment Path](https://github.com/sfraysse/moodle-assessmentpath-block/archive/v3.9.0.zip) pour Moodle 3.9
-- [Rapport Assessment Path](https://github.com/sfraysse/moodle-assessmentpath-report/archive/v3.9.0.zip) pour Moodle 3.9
+- [Rapport Assessment Path](https://github.com/sfraysse/moodle-assessmentpath-report/archive/v4.5.0.zip) pour Moodle 3.9
 
 
 
@@ -97,9 +94,7 @@ Lorsque l’utilisateur est autorisé à accéder aux rapports de suivi, un ongl
 - Suivi d’un apprenant pour un parcours ;
 - Statistiques des tests Quetzal (optionnel) ;
 
-Par ailleurs, le bloc `Assessment Path progress` peut être ajouté au cours. Il présente la progression des différents groupes dans les parcours d’évaluation.
-
-Enfin, le rapport de `Suivi d’un groupe pour une étape du parcours` présente une fonction de modification des scores.
+Par ailleurs, le rapport de `Suivi d’un groupe pour une étape du parcours` présente une fonction de modification des scores.
 
 
 ## Notifications

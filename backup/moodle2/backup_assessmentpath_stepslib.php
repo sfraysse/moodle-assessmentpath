@@ -41,7 +41,7 @@ class backup_assessmentpath_activity_structure_step extends backup_activity_stru
 
 		$steps = new backup_nested_element('steps');
 		$step = new backup_nested_element('step', array('id'), array(
-			'activity', 'title', 'code', 'rank'));
+			'activity', 'title', 'code', 'position'));
 
 		$tests = new backup_nested_element('tests');
 		$test = new backup_nested_element('test', array('id'), array(

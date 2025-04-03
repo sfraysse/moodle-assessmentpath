@@ -26,7 +26,7 @@
 
 function assessmentpath_get_steps($activityid) {
 	global $DB;
-	$datas = $DB->get_records('assessmentpath_steps', array('activity'=>$activityid), 'rank ASC');
+	$datas = $DB->get_records('assessmentpath_steps', array('activity'=>$activityid), 'position ASC');
 	$steps = array();
 	foreach ($datas as $r) {
 		$steps[$r->id] = new assessmentpath_step();
@@ -69,7 +69,7 @@ class assessmentpath_step {
 		$this->data->title = $formdata->step_title[$index];
 		$this->data->code = $formdata->step_code[$index];
 		$this->data->activity = $formdata->id;
-		$this->data->rank = $formdata->step_rank[$index];
+		$this->data->position = $formdata->step_rank[$index];
 		// Initial test
 		$test_initial = new assessmentpath_test();
 		$test_initial->load_from_form($formdata, $form, $index, false);
