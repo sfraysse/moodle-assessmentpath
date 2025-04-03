@@ -26,8 +26,8 @@
 				<FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="activity" COMMENT=""/>
 				<FIELD NAME="activity" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" DEFAULT="0" COMMENT="" PREVIOUS="id" NEXT="title" />
 				<FIELD NAME="title" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Test title" PREVIOUS="activity" NEXT="code" />
-				<FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="" PREVIOUS="title" NEXT="rank" />
-				<FIELD NAME="rank" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="code" COMMENT="" />
+				<FIELD NAME="code" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="" PREVIOUS="title" NEXT="position" />
+				<FIELD NAME="position" TYPE="int" LENGTH="3" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="code" COMMENT="" />
 			</FIELDS>
 			<KEYS>
 				<KEY NAME="primary" TYPE="primary" FIELDS="id" />

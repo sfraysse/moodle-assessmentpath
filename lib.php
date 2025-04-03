@@ -37,7 +37,6 @@ function assessmentpath_supports($feature) {
 		case FEATURE_BACKUP_MOODLE2:			return true;  // True if module supports backup/restore of moodle2 format
 		case FEATURE_GROUPS:					return false; // True if module supports groups
 		case FEATURE_GROUPINGS:					return false; // True if module supports groupings
-		case FEATURE_GROUPMEMBERSONLY:			return true;  // True if module supports groupmembersonly
 		case FEATURE_SHOW_DESCRIPTION:			return true; // True if module can show description on course main page
 		case FEATURE_NO_VIEW_LINK:				return false; // True if module has no 'view' page (like label)
 		case FEATURE_MOD_INTRO:					return true;  // True if module supports intro editor
@@ -51,6 +50,7 @@ function assessmentpath_supports($feature) {
 		case FEATURE_IDNUMBER:					return false; // True if module supports outcomes
 		case FEATURE_COMMENT:					return false; // 
 		case FEATURE_RATE:						return false; //  
+        case FEATURE_MOD_PURPOSE:             	return MOD_PURPOSE_CONTENT;
 		default: return null;
 	}
 }
@@ -379,7 +379,7 @@ function assessmentpath_grade_item_delete($activity) {
  */
 function assessmentpath_get_file_areas($course, $cm, $context) {
 	global $DB;
-	$steps = $DB->get_records('assessmentpath_steps', array('activity' => $cm->instance), 'rank ASC', 'id,title,code');
+	$steps = $DB->get_records('assessmentpath_steps', array('activity' => $cm->instance), 'position ASC', 'id,title,code');
 	$areas = array();
 	require_once(dirname(__FILE__).'/locallib.php');
 	foreach ($steps as $step) {
@@ -391,16 +391,16 @@ function assessmentpath_get_file_areas($course, $cm, $context) {
 /**
  * File browsing support for SCORM file areas
  *
- * @param stdclass $browser
- * @param stdclass $areas
- * @param stdclass $course
- * @param stdclass $cm
- * @param stdclass $context
+ * @param file_browser $browser
+ * @param object $areas
+ * @param object $course
+ * @param object $cm
+ * @param object $context
  * @param string $filearea
  * @param int $itemid
  * @param string $filepath
  * @param string $filename
- * @return stdclass file_info instance or null if not found
+ * @return object file_info instance or null if not found
  */
 function assessmentpath_get_file_info($browser, $areas, $course, $cm, $context, $filearea, $itemid, $filepath, $filename) {
 

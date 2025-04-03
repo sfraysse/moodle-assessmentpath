@@ -31,6 +31,8 @@ $PAGE->requires->js('/mod/assessmentpath/javascript/mod_edit.js');
 
 class mod_assessmentpath_mod_form extends moodleform_mod {
 
+	protected $steps = [];
+
 	function definition()
 	{
 		global $CFG, $COURSE;

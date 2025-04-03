@@ -107,7 +107,7 @@ function assessmentpath_report_populate_activities(&$activities, $courseid, $gro
 function assessmentpath_report_populate_steps(&$steps, $activityid, $remediation = 0) {
 	global $DB;
 	$sql = "
-		SELECT S.id, S.code, S.title, S.rank, T.sco AS scoid
+		SELECT S.id, S.code, S.title, S.position, T.sco AS scoid
 		FROM {assessmentpath} A
 		INNER JOIN {assessmentpath_steps} S ON S.activity=A.id
 		INNER JOIN {assessmentpath_tests} T ON T.step=S.id AND T.remediation=$remediation
@@ -121,7 +121,7 @@ function assessmentpath_report_populate_steps(&$steps, $activityid, $remediation
 			$step->id = $record->id;
 			$step->code = $record->code;
 			$step->title = $record->title;
-			$step->rank = $record->rank;
+			$step->position = $record->position;
 			$step->scoid = $record->scoid;
 			$steps[$step->id] = $step;
 			$scoids[] = $step->scoid;
@@ -132,15 +132,15 @@ function assessmentpath_report_populate_steps(&$steps, $activityid, $remediation
 }
 
 function assessmentpath_report_compare_steps_by_rank($step_record1, $step_record2) {
-	if ($step_record1->rank == $step_record2->rank) return 0;
-	return $step_record1->rank < $step_record2->rank ? -1 : 1;
+	if ($step_record1->position == $step_record2->position) return 0;
+	return $step_record1->position < $step_record2->position ? -1 : 1;
 }
 
 function assessmentpath_report_populate_step(&$step) {
 	global $DB;
 	$stepid = $step->id;
 	$sql = "
-		SELECT S.id, S.code, S.title, S.rank, T.sco AS scoid, T.remediation
+		SELECT S.id, S.code, S.title, S.position, T.sco AS scoid, T.remediation
 		FROM {assessmentpath_steps} S
 		INNER JOIN {assessmentpath_tests} T ON T.step=S.id
 		INNER JOIN {scormlite_scoes} SS ON SS.id=T.sco

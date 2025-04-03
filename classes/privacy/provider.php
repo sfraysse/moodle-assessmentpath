@@ -149,7 +149,7 @@ class provider implements
                        sst.element,
                        sst.value,
                        sst.timemodified,
-                       step.rank,
+                       step.position,
                        test.remediation,
                        ctx.id as contextid
                   FROM {scormlite_scoes_track} sst
@@ -172,7 +172,7 @@ class provider implements
         $alldata = [];
         $scoestracks = $DB->get_recordset_sql($sql, $params);
         foreach ($scoestracks as $track) {
-            $alldata[$track->contextid][$track->rank][$track->remediation][$track->attempt][] = (object)[
+            $alldata[$track->contextid][$track->position][$track->remediation][$track->attempt][] = (object)[
                 'element' => $track->element,
                 'value' => $track->value,
                 'timemodified' => transform::datetime($track->timemodified),
@@ -183,12 +183,12 @@ class provider implements
         // Push in folders
         array_walk($alldata, function ($stepsdata, $contextid) {
             $context = \context::instance_by_id($contextid);
-            array_walk($stepsdata, function ($stepdata, $rank) use ($context) {
-                array_walk($stepdata, function ($testdata, $remediation) use ($context, $rank) {
-                    array_walk($testdata, function ($attemptdata, $attempt) use ($context, $rank, $remediation) {
+            array_walk($stepsdata, function ($stepdata, $position) use ($context) {
+                array_walk($stepdata, function ($testdata, $remediation) use ($context, $position) {
+                    array_walk($testdata, function ($attemptdata, $attempt) use ($context, $position, $remediation) {
                         $subcontext = [
                             get_string('steps', 'assessmentpath'),
-                            get_string('step', 'assessmentpath') . ' ' . ($rank+1),
+                            get_string('step', 'assessmentpath') . ' ' . ($position+1),
                             $remediation ? get_string('remediationtest', 'assessmentpath') : get_string('initialtest', 'assessmentpath'),
                             get_string('myattempts', 'scorm'),
                             get_string('attempt', 'scorm') . " $attempt"
